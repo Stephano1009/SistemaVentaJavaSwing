@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Conexion {
-    /*Paso 1: Método para conectar a nuestra base de datos*/
+    /*conectar a nuestra base de datos*/
     Connection con;
     public Connection getConnection(){
         String url = "jdbc:mysql://localhost:3306/sistemaescritorio";

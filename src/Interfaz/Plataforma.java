@@ -10,19 +10,26 @@ import Paneles.PanelProveedor;
 import Paneles.PanelReporte;
 import Paneles.PanelUsuario;
 import Paneles.PanelVenta;
+import javax.swing.JOptionPane;
 import paneles.CambiaPanel;
 
-/**
- *
- * @author Stephano Sanchez
- */
 public class Plataforma extends javax.swing.JFrame {
 
     private CambiaPanel cambiaPanel;
+    private String cargo = null;
+    private String nombreEmpleado = null;
 
     public Plataforma() {
         initComponents();
         cambiaPanel = new CambiaPanel(PanelPlataforma);
+    }
+
+    public void getNombreusuario(String cargo, String nombreEmpleado) {
+        this.cargo = cargo;
+        this.nombreEmpleado = nombreEmpleado;
+        /*Seteamos el nombre del empleado*/
+        lblNombreEmpleado.setText("Hola, " + nombreEmpleado);
+        lblNombreCargo.setText("Cargo: " + cargo);
     }
 
     @SuppressWarnings("unchecked")
@@ -45,6 +52,8 @@ public class Plataforma extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnProductos = new javax.swing.JButton();
+        lblNombreEmpleado = new javax.swing.JLabel();
+        lblNombreCargo = new javax.swing.JLabel();
         PanelPlataforma = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -53,11 +62,14 @@ public class Plataforma extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Book Antiqua", 0, 14)); // NOI18N
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel1.setFont(new java.awt.Font("Georgia", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(102, 0, 0));
         jLabel1.setText("Menú de Registros");
 
         btnCategoria.setBackground(new java.awt.Color(255, 255, 255));
-        btnCategoria.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnCategoria.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Menu Cateogoria.png"))); // NOI18N
         btnCategoria.setText("CATEGORÍAS");
         btnCategoria.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -69,7 +81,7 @@ public class Plataforma extends javax.swing.JFrame {
         });
 
         btnProveedores.setBackground(new java.awt.Color(255, 255, 255));
-        btnProveedores.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnProveedores.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnProveedores.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Menu Proveedores.png"))); // NOI18N
         btnProveedores.setText("PROVEEDORES");
         btnProveedores.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -81,7 +93,7 @@ public class Plataforma extends javax.swing.JFrame {
         });
 
         btnClientes.setBackground(new java.awt.Color(255, 255, 255));
-        btnClientes.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnClientes.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Menu Clientes.png"))); // NOI18N
         btnClientes.setText("CLIENTES");
         btnClientes.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -93,7 +105,7 @@ public class Plataforma extends javax.swing.JFrame {
         });
 
         btnEmpleados.setBackground(new java.awt.Color(255, 255, 255));
-        btnEmpleados.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnEmpleados.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnEmpleados.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Menu Empleados.png"))); // NOI18N
         btnEmpleados.setText("EMPLEADOS");
         btnEmpleados.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -105,7 +117,7 @@ public class Plataforma extends javax.swing.JFrame {
         });
 
         btnUsuario.setBackground(new java.awt.Color(255, 255, 255));
-        btnUsuario.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnUsuario.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Menu Usuarios.png"))); // NOI18N
         btnUsuario.setText("USUARIOS");
         btnUsuario.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -117,7 +129,7 @@ public class Plataforma extends javax.swing.JFrame {
         });
 
         btnCargo.setBackground(new java.awt.Color(255, 255, 255));
-        btnCargo.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnCargo.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnCargo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Menu Cargos.png"))); // NOI18N
         btnCargo.setText("CARGOS");
         btnCargo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -129,7 +141,7 @@ public class Plataforma extends javax.swing.JFrame {
         });
 
         btnPago.setBackground(new java.awt.Color(255, 255, 255));
-        btnPago.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnPago.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnPago.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Menu Pago.png"))); // NOI18N
         btnPago.setText("METODO DE PAGO");
         btnPago.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -140,11 +152,12 @@ public class Plataforma extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setFont(new java.awt.Font("Bodoni MT", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Georgia", 0, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(102, 0, 0));
         jLabel2.setText("Menú de Ventas");
 
         btnNuevaVenta.setBackground(new java.awt.Color(255, 255, 255));
-        btnNuevaVenta.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnNuevaVenta.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnNuevaVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Menu Ventas.png"))); // NOI18N
         btnNuevaVenta.setText("NUEVA VENTA");
         btnNuevaVenta.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -159,7 +172,7 @@ public class Plataforma extends javax.swing.JFrame {
         });
 
         btnReporte.setBackground(new java.awt.Color(255, 255, 255));
-        btnReporte.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnReporte.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Menu Reportes.png"))); // NOI18N
         btnReporte.setText("REPORTE DE VENTA");
         btnReporte.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -170,13 +183,13 @@ public class Plataforma extends javax.swing.JFrame {
             }
         });
 
-        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Perfil.png"))); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/hombre.png"))); // NOI18N
 
-        jLabel3.setFont(new java.awt.Font("Book Antiqua", 0, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Georgia", 0, 14)); // NOI18N
         jLabel3.setText("Bievenido");
 
         btnProductos.setBackground(new java.awt.Color(255, 255, 255));
-        btnProductos.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnProductos.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnProductos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Menu Productos.png"))); // NOI18N
         btnProductos.setText("PRODUCTOS");
         btnProductos.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -187,49 +200,63 @@ public class Plataforma extends javax.swing.JFrame {
             }
         });
 
+        lblNombreEmpleado.setFont(new java.awt.Font("Georgia", 0, 14)); // NOI18N
+        lblNombreEmpleado.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        lblNombreCargo.setFont(new java.awt.Font("Georgia", 0, 14)); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel5)
-                .addGap(71, 71, 71))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(80, 80, 80))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnNuevaVenta, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnCategoria, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnProveedores, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnEmpleados, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnCargo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnPago, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnReporte, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
-                            .addComponent(btnProductos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3))
-                                .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblNombreCargo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnNuevaVenta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCategoria, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnProveedores, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnClientes, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEmpleados, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnUsuario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnCargo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnPago, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnReporte, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                            .addComponent(btnProductos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(lblNombreEmpleado, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jLabel5)
-                .addGap(27, 27, 27)
+                .addGap(8, 8, 8)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
                 .addComponent(jLabel3)
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblNombreEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8)
+                .addComponent(lblNombreCargo, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
+                .addGap(12, 12, 12)
                 .addComponent(btnCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnProveedores, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -278,7 +305,7 @@ public class Plataforma extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(PanelPlataforma, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -299,6 +326,7 @@ public class Plataforma extends javax.swing.JFrame {
 
     private void btnEmpleadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpleadosActionPerformed
         cambiaPanel.cambiarPanel(new PanelEmpleados());
+
     }//GEN-LAST:event_btnEmpleadosActionPerformed
 
     private void btnCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategoriaActionPerformed
@@ -318,7 +346,11 @@ public class Plataforma extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuarioActionPerformed
-        cambiaPanel.cambiarPanel(new PanelUsuario());
+        if (!"Administrador".equals(this.cargo)) {
+            JOptionPane.showMessageDialog(null, "No tienes acceso a este recurso");
+        } else {
+            cambiaPanel.cambiarPanel(new PanelUsuario());
+        }
     }//GEN-LAST:event_btnUsuarioActionPerformed
 
     private void btnCargoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargoActionPerformed
@@ -371,7 +403,7 @@ public class Plataforma extends javax.swing.JFrame {
             }
         });
     }
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JPanel PanelPlataforma;
@@ -391,5 +423,7 @@ public class Plataforma extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     public javax.swing.JPanel jPanel2;
+    public javax.swing.JLabel lblNombreCargo;
+    public javax.swing.JLabel lblNombreEmpleado;
     // End of variables declaration//GEN-END:variables
 }

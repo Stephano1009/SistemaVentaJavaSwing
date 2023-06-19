@@ -165,4 +165,21 @@ public class UsuarioDao {
         } 
         return idCargo;
     }
+    
+    public String obtenerNombreUsuarioPorId(int idUsuario) {
+        String nombreUsuario = null;
+        String sql = "SELECT nombreUsuario FROM usuario WHERE idUsuario = ?";
+        try {
+            con = conectar.getConnection();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, idUsuario);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                nombreUsuario = rs.getString("nombreUsuario");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
+        return nombreUsuario;
+    }
 }

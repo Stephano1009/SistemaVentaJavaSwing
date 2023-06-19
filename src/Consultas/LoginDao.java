@@ -15,8 +15,11 @@ public class LoginDao {
 
     public Usuario login(String userName, String passName) {
         Usuario usu = null;
-        String sql = "SELECT nombreUsuario, claveUsuario FROM "
-                + "usuario WHERE nombreUsuario = ? AND claveUsuario = ?";
+        String sql = "SELECT u.nombreUsuario, u.claveUsuario, c.nombreCargo, "
+                + "e.nombreEmpleado, e.apellidoEmpleado FROM usuario u "
+                + "INNER JOIN cargo c ON u.idCargo = c.idCargo "
+                + "INNER JOIN empleado e ON e.idUsuario = u.idUsuario "
+                + "WHERE u.nombreUsuario = ? AND u.claveUsuario = ?";
         try {
             con = conectar.getConnection();
             ps = con.prepareStatement(sql);
@@ -28,9 +31,12 @@ public class LoginDao {
                 usu = new Usuario();
                 usu.setNombreUsuario(rs.getString("nombreUsuario"));
                 usu.setClaveUsuario(rs.getString("claveUsuario"));
+                usu.setNombreCargo(rs.getString("nombreCargo"));
+                usu.setNombreEmpleado(rs.getString("nombreEmpleado") + " "
+                        + rs.getString("apellidoEmpleado"));
             }
         } catch (Exception e) {
-            System.out.println("Ocurrio un error: "+ e.getLocalizedMessage());
+            System.out.println("Ocurrio un error: " + e.getLocalizedMessage());
         }
         return usu;
     }

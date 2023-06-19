@@ -9,7 +9,6 @@ import javax.swing.table.DefaultTableModel;
 import Consultas.UsuarioDao;
 import Clases.Usuario;
 
-
 public class PanelUsuario extends javax.swing.JPanel {
 
     UsuarioDao daoUsuario = new UsuarioDao(); //instanciamos la clase UsuarioDao
@@ -193,21 +192,19 @@ public class PanelUsuario extends javax.swing.JPanel {
             Object valorCelda = TablaUsuario.getValueAt(filaSeleccionada, 0);
             /*declaramos la variable valorCelda de tipo Object para almacenar cualquier
             tipo de objeto en esa variable*/
-            
-            /*Se utiliza Object por el método getValueAt de la clase JTable,
+
+ /*Se utiliza Object por el método getValueAt de la clase JTable,
             que devuelve un objeto genérico '(Object)', el cual representa el 
             valor de la celda en la posición especificada por los argumentos */
-            
-            /*La razon por la cual se devuelve un objeto génerico, es porque la tabla
+ /*La razon por la cual se devuelve un objeto génerico, es porque la tabla
             puede contener diferentes tipos de datos en sus celdas, permitiendo así 
             realizar las verificaciones y conversiones necesarias según el tipo de dato
             que se espera obtener*/
-            
             if (valorCelda instanceof Integer) {
                 /*Se verifica si el valor de la celda es de tipo entero (instanceof Integer).
                 Esto se hace para asegurarse de que el valor de la celda sea realmente un 
                 identificador de usuario válido*/
-                   
+
                 int idUsuario = (int) valorCelda;
                 /*Realizamos una conversión de la variable valorCelda que es de tipo Object
                 a int, esto con el fin de que el valor de la celda contiene un numero entero
@@ -215,17 +212,17 @@ public class PanelUsuario extends javax.swing.JPanel {
                 se producirá una excepción en tiempo de ejecución. Luego si la conversión tiene
                 éxito, este valor le asignamos al idUsuario que ahora va a contener el identificador
                 del usuario seleccionado*/
-                
+
                 Usuario u = daoUsuario.leerUsuario(idUsuario);
                 /*Una vez que se haya verificado, se hace un llamado al objeto daoUsuario, para
                 leer los datos correspondientes. el resultado de la llamada se guarda en la 
                 variable 'u' que es de tipo Usuario(Clase)*/
-                
+
                 panelRegistroUsuario.setDatosEditar(u);
                 /*invocamos al método serDatosEditar del objeto panelRegistroUsuario, pasando 
                 como argumento 'u'. Esto probablemente actualiza los campos del panel con los
                 datos del usuario seleccionado para editar.*/
-                
+
                 panelRegistroUsuario.btnGuardarUsuario.setEnabled(false);
                 JOptionPane.showOptionDialog(
                         null,

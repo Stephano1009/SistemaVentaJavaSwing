@@ -1,12 +1,27 @@
 
 package Paneles;
 
+import Clases.Categoria;
+import Consultas.CategoriaDao;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
 
 public class PanelCategoria extends javax.swing.JPanel {
-
+    
+    CategoriaDao daoCategoria = new CategoriaDao();
+    DefaultTableModel modeloCategoria = new DefaultTableModel();
+    
+    private PanelRegistroCategoria panelRegistroCategoria;
     
     public PanelCategoria() {
         initComponents();
+        listarCategorias(TablaCategoria);
+        panelRegistroCategoria = new PanelRegistroCategoria();
     }
 
     @SuppressWarnings("unchecked")
@@ -17,7 +32,7 @@ public class PanelCategoria extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         btnNuevaCategoria = new javax.swing.JButton();
         btnEliminarCategoria = new javax.swing.JButton();
-        btnActualizarCategoria = new javax.swing.JButton();
+        btnListarCategoria = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TablaCategoria = new javax.swing.JTable();
@@ -33,14 +48,24 @@ public class PanelCategoria extends javax.swing.JPanel {
         btnNuevaCategoria.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnNuevaCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/mas.png"))); // NOI18N
         btnNuevaCategoria.setText("NUEVA CATEGORÍA");
+        btnNuevaCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevaCategoriaActionPerformed(evt);
+            }
+        });
 
         btnEliminarCategoria.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnEliminarCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/eliminar.png"))); // NOI18N
         btnEliminarCategoria.setText("ELIMINAR");
 
-        btnActualizarCategoria.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        btnActualizarCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/actualizar.png"))); // NOI18N
-        btnActualizarCategoria.setText("ACTUALIZAR");
+        btnListarCategoria.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnListarCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/lista.png"))); // NOI18N
+        btnListarCategoria.setText("LISTAR");
+        btnListarCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnListarCategoriaActionPerformed(evt);
+            }
+        });
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "LISTADO DE CATEGORÍAS", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
@@ -87,10 +112,10 @@ public class PanelCategoria extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnListarCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEditarCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(37, 37, 37)
-                        .addComponent(btnActualizarCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnEliminarCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -111,7 +136,7 @@ public class PanelCategoria extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEliminarCategoria)
-                    .addComponent(btnActualizarCategoria)
+                    .addComponent(btnListarCategoria)
                     .addComponent(btnEditarCategoria))
                 .addContainerGap())
         );
@@ -128,12 +153,57 @@ public class PanelCategoria extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnListarCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarCategoriaActionPerformed
+        listarCategorias(TablaCategoria);
+    }//GEN-LAST:event_btnListarCategoriaActionPerformed
+
+    private void btnNuevaCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevaCategoriaActionPerformed
+        PanelRegistroCategoria panelRegistroCategoria = new PanelRegistroCategoria();
+        panelRegistroCategoria.btnActualizarCategoria.setEnabled(false);
+        JOptionPane.showOptionDialog(
+                null,
+                panelRegistroCategoria,
+                "NUEVO CATEGORÍA",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                new Object[]{},
+                null
+        );
+    }//GEN-LAST:event_btnNuevaCategoriaActionPerformed
+
+    public void listarCategorias(JTable tabla) {
+        modeloCategoria = (DefaultTableModel) tabla.getModel();
+        List<Categoria> listaCategorias = daoCategoria.listarCategoria();
+        Object[] object = new Object[3];
+
+        // Creamos un objeto DefaultTableCellRenderer para centrar el contenido
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Asignar el centro renderizador a todas las columnas
+        int columnCount = tabla.getColumnCount();
+        for (int i = 0; i < columnCount; i++) {
+            tabla.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+        for (int i = 0; i < listaCategorias.size(); i++) {
+            object[0] = listaCategorias.get(i).getIdCategoria();
+            object[1] = listaCategorias.get(i).getNombreCategoria();
+            if (listaCategorias.get(i).isEstadoCategoria()) {
+                object[2] = "Activo";
+            } else {
+                object[2] = "Inactivo";
+            }
+            modeloCategoria.addRow(object);
+        }
+        TablaCategoria.setModel(modeloCategoria);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTable TablaCategoria;
-    public javax.swing.JButton btnActualizarCategoria;
     public javax.swing.JButton btnEditarCategoria;
     public javax.swing.JButton btnEliminarCategoria;
+    public javax.swing.JButton btnListarCategoria;
     public javax.swing.JButton btnNuevaCategoria;
     private javax.swing.JLabel jLabel1;
     public javax.swing.JPanel jPanel1;

@@ -231,9 +231,6 @@ public class PanelCargo extends javax.swing.JPanel {
             object[0] = listaCargo.get(i).getIdCargo();
             object[1] = listaCargo.get(i).getNombreCargo();
             object[2] = listaCargo.get(i).isEstadoCargo();
-            int idCargo = listaCargo.get(i).getIdCargo();
-            String nombreCargo = daoUsuario.obtenerNombreCargoPorId(idCargo);
-            object[2] = nombreCargo;
             if (listaCargo.get(i).isEstadoCargo()) {
                 object[2] = "Activo";
             } else {

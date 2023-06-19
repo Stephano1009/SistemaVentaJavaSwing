@@ -9,6 +9,7 @@ public class Usuario {
     boolean estadoUsuario;
     int idCargo;
     String nombreCargo;
+    String nombreEmpleado;
    
     
     /*Paso 2: Creamos un constructor vacío*/
@@ -74,7 +75,13 @@ public class Usuario {
     public void setNombreCargo(String nombreCargo) {
         this.nombreCargo = nombreCargo;
     }
-    
-    
-      
+
+    public String getNombreEmpleado() {
+        return nombreEmpleado;
+    }
+
+    public void setNombreEmpleado(String nombreEmpleado) {
+        this.nombreEmpleado = nombreEmpleado;
+    }
+       
 }
