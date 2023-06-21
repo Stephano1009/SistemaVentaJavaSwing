@@ -346,7 +346,7 @@ public class Plataforma extends javax.swing.JFrame {
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuarioActionPerformed
-        if (!"Administrador".equals(this.cargo)) {
+        if (!"Gerente".equals(this.cargo) &&(!"Administrador".equals(this.cargo))) {
             JOptionPane.showMessageDialog(null, "No tienes acceso a este recurso");
         } else {
             cambiaPanel.cambiarPanel(new PanelUsuario());

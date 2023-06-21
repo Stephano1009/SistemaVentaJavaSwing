@@ -3,12 +3,15 @@ package Paneles;
 import Clases.Empleado;
 import Clases.Usuario;
 import Consultas.UsuarioDao;
+import java.awt.Dialog;
+import java.awt.Window;
 import java.util.List;
 import javax.swing.JComboBox;
-
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 public class PanelRegistroEmpleado extends javax.swing.JPanel {
-    
+
     Usuario usu = new Usuario();
     UsuarioDao usuDao = new UsuarioDao();
 
@@ -16,25 +19,24 @@ public class PanelRegistroEmpleado extends javax.swing.JPanel {
         initComponents();
         CargarUsuario();
     }
-    
-    
-    public void CargarUsuario(){
+
+    public void CargarUsuario() {
         List<Usuario> listaUsuarios = usuDao.listarUsuario();
-        for (Usuario UsuEmple : listaUsuarios){
+        for (Usuario UsuEmple : listaUsuarios) {
             cboEmpleadoUsuario.addItem(UsuEmple.getNombreUsuario());
         }
     }
-    
+
     public JComboBox getCboEmpleadoUsuario() {
         return cboEmpleadoUsuario;
     }
-    
+
     private PanelEmpleados panelEmpleado;
-    
+
     public void setPanelEmpleado(PanelEmpleados panelEmpleado) {
         this.panelEmpleado = panelEmpleado;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -56,33 +58,57 @@ public class PanelRegistroEmpleado extends javax.swing.JPanel {
         txtCelularEmpleado = new javax.swing.JTextField();
         txtCorreoEmpleado = new javax.swing.JTextField();
         cboEmpleadoUsuario = new javax.swing.JComboBox<>();
+        btnNuevoUsu = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("DATOS DEL EMPLEADO"));
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "DATOS DEL EMPLEADO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
 
+        jLabel1.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jLabel1.setText("Nombre Empleado");
 
+        jLabel2.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jLabel2.setText("Apellidos Empleado");
 
+        jLabel3.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jLabel3.setText("Documento Identidad");
 
+        jLabel4.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jLabel4.setText("Celular:");
 
+        jLabel5.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jLabel5.setText("Usuario:");
 
+        jLabel6.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jLabel6.setText("Correo Electrónico:");
 
+        chkActivoEmpleado.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         chkActivoEmpleado.setText("Activo Empleado");
 
+        btnGuardarEmpleado.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnGuardarEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/guardar.png"))); // NOI18N
         btnGuardarEmpleado.setText("GUARDAR EMPLEADO");
 
+        btnActualizarEmpleado.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnActualizarEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/actualizar.png"))); // NOI18N
         btnActualizarEmpleado.setText("ACTUALIZAR EMPLEADO");
 
         cboEmpleadoUsuario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione un Usuario" }));
+        cboEmpleadoUsuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboEmpleadoUsuarioActionPerformed(evt);
+            }
+        });
+
+        btnNuevoUsu.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnNuevoUsu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/mas.png"))); // NOI18N
+        btnNuevoUsu.setText("NUEVO USUARIO");
+        btnNuevoUsu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNuevoUsuActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -114,9 +140,11 @@ public class PanelRegistroEmpleado extends javax.swing.JPanel {
                     .addComponent(txtCelularEmpleado)
                     .addComponent(txtCorreoEmpleado)
                     .addComponent(cboEmpleadoUsuario, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(26, 26, 26)
-                .addComponent(chkActivoEmpleado)
-                .addGap(22, 22, 22))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(chkActivoEmpleado, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnNuevoUsu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,7 +165,7 @@ public class PanelRegistroEmpleado extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtApellidosEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboEmpleadoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chkActivoEmpleado))
+                    .addComponent(btnNuevoUsu))
                 .addGap(7, 7, 7)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -145,7 +173,8 @@ public class PanelRegistroEmpleado extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtDniEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCorreoEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCorreoEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(chkActivoEmpleado))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardarEmpleado)
@@ -159,8 +188,8 @@ public class PanelRegistroEmpleado extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,10 +211,37 @@ public class PanelRegistroEmpleado extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnNuevoUsuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoUsuActionPerformed
+        PanelRegistroUsuario panelRegistroUsuario = new PanelRegistroUsuario();
+        panelRegistroUsuario.btnActualizarUsuario.setEnabled(false);
+        JOptionPane.showOptionDialog(
+                null,
+                panelRegistroUsuario,
+                "NUEVO USUARIO",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                new Object[]{},
+                null
+        );
+        cboEmpleadoUsuario.removeAllItems();
+        this.CargarUsuario();
+        Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof Dialog) {
+            Dialog dialog = (Dialog) window;
+            dialog.dispose();
+        }
+    }//GEN-LAST:event_btnNuevoUsuActionPerformed
+
+    private void cboEmpleadoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboEmpleadoUsuarioActionPerformed
+
+    }//GEN-LAST:event_cboEmpleadoUsuarioActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnActualizarEmpleado;
     public javax.swing.JButton btnGuardarEmpleado;
+    public javax.swing.JButton btnNuevoUsu;
     public javax.swing.JComboBox<String> cboEmpleadoUsuario;
     public javax.swing.JCheckBox chkActivoEmpleado;
     private javax.swing.JLabel jLabel1;

@@ -8,42 +8,27 @@ import java.util.List;
 import Clases.Conexion;
 import Clases.Usuario;
 
-
 public class UsuarioDao {
 
-    
-
-    /*Paso 1: Creamos los métodos para las operaciones de crud y al mismo 
-              tiempo conectando a la base de datos*/
-
- /*Paso 2: Instanciamos la clase Conexion*/
     Conexion conectar = new Conexion();
-    /*Paso 3: Creamos una variable de tipo Connection */
     Connection con;
-    /*Paso 4: Creamos una variable de tipo PreparedStatement para ejecutar consultas*/
     PreparedStatement ps;
-    /*Paso 5: Creamos una variable para recuperar y manipular datos de la consulta*/
     ResultSet rs;
-
-    /*Paso 6*: Creamos el metodo de public de tipo List para listar*/
+    
     public List listarUsuario() {
-        /*Paso 7: Declaramos una variable de tipo tipo del objeto usuario*/
         List<Usuario> datosUsuario = new ArrayList<>();
         String sql = "select * from usuario";
-        /*Paso 8: Colocamos un try catch para hacer referencia a la conexion*/
         try {
             con = conectar.getConnection();
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()) {
-                /*Paso 9: Instanciamos el objeto usuario*/
                 Usuario u = new Usuario();
                 u.setIdUsuario(rs.getInt("idUsuario"));
                 u.setNombreUsuario(rs.getString("nombreUsuario"));
                 u.setClaveUsuario(rs.getString("claveUsuario"));
                 u.setEstadoUsuario(rs.getBoolean("estadoUsuario"));
                 u.setIdCargo(rs.getInt("idCargo"));
-                /*Paso 10: Agregamos a la variable datosUsuario*/
                 datosUsuario.add(u);
             }
         } catch (Exception e) {
@@ -51,7 +36,7 @@ public class UsuarioDao {
         return datosUsuario;
     }
 
-    /*Método para agregar o guardar usuarios*/
+    
     public int agregarUsu(Usuario u) {
         String sql = "INSERT INTO usuario (nombreUsuario, claveUsuario, idCargo, estadoUsuario) VALUES (?, ?, ?, ?)";
         try (Connection con = conectar.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
@@ -60,10 +45,10 @@ public class UsuarioDao {
             ps.setInt(3, u.getIdCargo());
             ps.setBoolean(4, u.isEstadoUsuario());
             ps.executeUpdate();
-            return 1; // Retorna 1 si se agrega correctamente
+            return 1; 
         } catch (Exception e) {
             e.printStackTrace();
-            return 0; // Retorna 0 en caso de error
+            return 0; 
         }
     }
 
@@ -130,8 +115,6 @@ public class UsuarioDao {
 
     public String obtenerNombreCargoPorId(int idCargo) {
         String nombreCargo = null;
-        /*inicializamos y declaramos la variable como null. será utilizada 
-                                     para almacenar el nombre del cargo encontrada en la base de datos*/
         String sql = "SELECT nombreCargo FROM cargo WHERE idCargo = ?";
         try {
             con = conectar.getConnection();
@@ -149,8 +132,6 @@ public class UsuarioDao {
     
     public int obtenerIdCargoPorNombreCargo(String nombreCargo) {
         int idCargo = 0;
-        /*inicializamos y declaramos la variable como null. será utilizada 
-        para almacenar el nombre del cargo encontrada en la base de datos*/
         String sql = "SELECT idCargo FROM cargo WHERE nombreCargo = ?";
         try {
             con = conectar.getConnection();

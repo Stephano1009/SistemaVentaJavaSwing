@@ -156,16 +156,15 @@ public class PanelRegistroCargo extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Falta ingresar datos");
             return;
         }
-        agregarCargo();
-        
+        agregarCargo(); 
     }//GEN-LAST:event_btnGuardarCargoActionPerformed
 
     private void btnActualizarCargoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarCargoActionPerformed
         ActualizarCargo();
-        Window window = SwingUtilities.getWindowAncestor(this); // Obtiene la ventana padre del panel
+        Window window = SwingUtilities.getWindowAncestor(this);
         if (window instanceof JDialog) {
             JDialog dialog = (JDialog) window;
-            dialog.dispose(); // Cierra el cuadro de diálogo
+            dialog.dispose(); 
         }
         btnGuardarCargo.setEnabled(false);
     }//GEN-LAST:event_btnActualizarCargoActionPerformed
