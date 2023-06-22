@@ -6,6 +6,10 @@ import java.awt.Window;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 public class PanelRegistroCargo extends javax.swing.JPanel {
 
@@ -14,6 +18,7 @@ public class PanelRegistroCargo extends javax.swing.JPanel {
 
     public PanelRegistroCargo() {
         initComponents();
+        ValidarCampo();
     }
     private PanelCargo panelCargo;
 
@@ -211,6 +216,33 @@ public class PanelRegistroCargo extends javax.swing.JPanel {
         txtCodigoCargo.setText(Integer.toString(c.getIdCargo()));
         txtNombreCargo.setText(c.getNombreCargo());
         chkEstadoCargo.setSelected(c.isEstadoCargo());
+    }
+    
+    private void ValidarCampo() {
+        ((AbstractDocument) txtNombreCargo.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("[a-zA-Z]{0,15}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("[a-zA-Z]{0,15}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

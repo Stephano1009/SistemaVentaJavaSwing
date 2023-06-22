@@ -1,14 +1,19 @@
 package Paneles;
 
-import Clases.Empleado;
 import Clases.Usuario;
 import Consultas.UsuarioDao;
 import java.awt.Dialog;
 import java.awt.Window;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 public class PanelRegistroEmpleado extends javax.swing.JPanel {
 
@@ -17,6 +22,8 @@ public class PanelRegistroEmpleado extends javax.swing.JPanel {
 
     public PanelRegistroEmpleado() {
         initComponents();
+        validarCampo();
+        validarCorreo(TOOL_TIP_TEXT_KEY);
         CargarUsuario();
     }
 
@@ -223,20 +230,137 @@ public class PanelRegistroEmpleado extends javax.swing.JPanel {
                 null,
                 new Object[]{},
                 null
-        );
+        ); 
         cboEmpleadoUsuario.removeAllItems();
         this.CargarUsuario();
         Window window = SwingUtilities.getWindowAncestor(this);
         if (window instanceof Dialog) {
             Dialog dialog = (Dialog) window;
             dialog.dispose();
-        }
+        }       
     }//GEN-LAST:event_btnNuevoUsuActionPerformed
 
     private void cboEmpleadoUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboEmpleadoUsuarioActionPerformed
 
     }//GEN-LAST:event_cboEmpleadoUsuarioActionPerformed
 
+    public boolean validarCorreo(String correo) {
+        // Expresión regular para validar el formato del correo electrónico
+        String regex = "^[A-Za-z0-9._%+-]+@(gmail\\.com|hotmail\\.com|outlook\\.com)$";
+
+        // Compilar la expresión regular en un patrón
+        Pattern pattern = Pattern.compile(regex);
+
+        // Crear un objeto Matcher para el correo ingresado
+        Matcher matcher = pattern.matcher(correo);
+
+        // Verificar si el correo coincide con el patrón
+        return matcher.matches();
+    }
+
+    public void validarCampo() {
+        //Validar campo de nombre
+        ((AbstractDocument) txtNombreEmpleado.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("[a-zA-Z\\s]{0,30}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("[a-zA-Z\\s]{0,30}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        //Validar campo de apellido
+        ((AbstractDocument) txtApellidosEmpleado.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("[a-zA-Z\\s]{0,30}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("[a-zA-Z\\s]{0,30}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        ((AbstractDocument) txtDniEmpleado.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("\\d{0,8}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("\\d{0,8}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        ((AbstractDocument) txtCelularEmpleado.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("\\d{0,9}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("\\d{0,9}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnActualizarEmpleado;

@@ -10,15 +10,20 @@ import Consultas.UsuarioDao;
 import java.awt.Window;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 public class PanelRegistroUsuario extends javax.swing.JPanel {
 
-    UsuarioDao daoUsuario = new UsuarioDao(); 
-    Usuario u = new Usuario(); 
-    CargoDao cargoDao = new CargoDao(); 
+    UsuarioDao daoUsuario = new UsuarioDao();
+    Usuario u = new Usuario();
+    CargoDao cargoDao = new CargoDao();
 
     public PanelRegistroUsuario() {
         initComponents();
+        ValidarCampo();
         cargarCargos();
 
     }
@@ -34,10 +39,10 @@ public class PanelRegistroUsuario extends javax.swing.JPanel {
         return cboCargoUsuario;
     }
 
-    private PanelUsuario panelUsuario; 
+    private PanelUsuario panelUsuario;
 
-    public void setPanelUsuario(PanelUsuario panelUsuario) { 
-        this.panelUsuario = panelUsuario;  
+    public void setPanelUsuario(PanelUsuario panelUsuario) {
+        this.panelUsuario = panelUsuario;
     }
 
     @SuppressWarnings("unchecked")
@@ -213,22 +218,22 @@ public class PanelRegistroUsuario extends javax.swing.JPanel {
     }//GEN-LAST:event_btnGuardarUsuarioActionPerformed
 
     private void btnActualizarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarUsuarioActionPerformed
-        actualizarUsuario(); 
-        Window window = SwingUtilities.getWindowAncestor(this);  
-        if (window instanceof JDialog) { 
-            JDialog dialog = (JDialog) window; 
-            dialog.dispose(); 
+        actualizarUsuario();
+        Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof JDialog) {
+            JDialog dialog = (JDialog) window;
+            dialog.dispose();
         }
     }//GEN-LAST:event_btnActualizarUsuarioActionPerformed
 
     public void agregarUsuario() {
 
-        String nomUsu = txtNombreUsuario.getText(); 
-        char[] claUsu = pswClaveUsuario.getPassword(); 
-        String claveString = new String(claUsu); 
+        String nomUsu = txtNombreUsuario.getText();
+        char[] claUsu = pswClaveUsuario.getPassword();
+        String claveString = new String(claUsu);
         //int idCargo = cboCargoUsuario.getSelectedIndex(); // Obtener el ID del cargo seleccionado en el JCombox y lo guardamos en idCargo
         Object nombreCargo = cboCargoUsuario.getSelectedItem();
-        boolean esUsu = chkActivoUsuario.isSelected(); 
+        boolean esUsu = chkActivoUsuario.isSelected();
 
         int idCargo = this.daoUsuario.obtenerIdCargoPorNombreCargo(nombreCargo.toString());
         u.setNombreUsuario(nomUsu);
@@ -263,22 +268,25 @@ public class PanelRegistroUsuario extends javax.swing.JPanel {
         char[] claveUsuario = pswClaveUsuario.getPassword();
         String contraString = new String(claveUsuario);
         Object valor = cboCargoUsuario.getSelectedItem();
-        int idCargo = daoUsuario.obtenerIdCargoPorNombreCargo(valor.toString());
-        boolean estadoUsuario = chkActivoUsuario.isSelected();
-
-        u.setIdUsuario(id);
-        u.setNombreUsuario(nombreUsuario);
-        u.setClaveUsuario(contraString);
-        u.setIdCargo(idCargo);
-        u.setEstadoUsuario(estadoUsuario);
-
-        int r = daoUsuario.actualizarUsuario(u);
-        if (r == 1) {
-            JOptionPane.showMessageDialog(null, "Usuario actualizado con éxito");
+        if (valor.toString().equals("SELECCIONE CARGO")) {
+            JOptionPane.showMessageDialog(null, "Error, debe debe seleccionar un cargo");
         } else {
-            JOptionPane.showMessageDialog(null, "Error al actualizar usuario");
+            int idCargo = daoUsuario.obtenerIdCargoPorNombreCargo(valor.toString());
+            boolean estadoUsuario = chkActivoUsuario.isSelected();
+            u.setIdUsuario(id);
+            u.setNombreUsuario(nombreUsuario);
+            u.setClaveUsuario(contraString);
+            u.setIdCargo(idCargo);
+            u.setEstadoUsuario(estadoUsuario);
+            int r = daoUsuario.actualizarUsuario(u);
+            if (r == 1) {
+                JOptionPane.showMessageDialog(null, "Usuario actualizado con éxito");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al actualizar usuario");
+            }
+            btnGuardarUsuario.setEnabled(false);
         }
-        btnGuardarUsuario.setEnabled(false);
+
     }
 
     public void setDatosEditar(Usuario u) {
@@ -289,6 +297,60 @@ public class PanelRegistroUsuario extends javax.swing.JPanel {
         String nombreCargo = daoUsuario.obtenerNombreCargoPorId(idCargo);
         cboCargoUsuario.setSelectedItem(nombreCargo);
         chkActivoUsuario.setSelected(u.isEstadoUsuario());
+    }
+
+    private void ValidarCampo() {
+        //Validar campo de nombre
+        ((AbstractDocument) txtNombreUsuario.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("[a-zA-Z]{0,20}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("[a-zA-Z]{0,20}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        // Validar campo de contraseña
+        ((AbstractDocument) pswClaveUsuario.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("[a-zA-Z0-9\\p{Punct}]{0,20}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("[a-zA-Z0-9\\p{Punct}]{0,20}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
     }
 
 

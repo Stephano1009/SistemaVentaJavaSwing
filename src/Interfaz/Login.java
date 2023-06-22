@@ -194,6 +194,7 @@ public class Login extends javax.swing.JFrame {
     public void limpiarCajas() {
         txtUsuario.setText("");
         pswPassword.setText("");
+        txtUsuario.requestFocus();
     }
     
     public static void main(String args[]) {

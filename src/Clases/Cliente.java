@@ -4,16 +4,16 @@ public class Cliente {
    int idCliente;
    String nombreCliente;
    String apellidoCliente;
-   char indentificacionCliente;
+   int identificacionCliente;
 
     public Cliente() {
     }
 
-    public Cliente(int idCliente, String nombreCliente, String apellidoCliente, char indentificacionCliente) {
+    public Cliente(int idCliente, String nombreCliente, String apellidoCliente, int identificacionCliente) {
         this.idCliente = idCliente;
         this.nombreCliente = nombreCliente;
         this.apellidoCliente = apellidoCliente;
-        this.indentificacionCliente = indentificacionCliente;
+        this.identificacionCliente = identificacionCliente;
     }
 
     public int getIdCliente() {
@@ -40,12 +40,12 @@ public class Cliente {
         this.apellidoCliente = apellidoCliente;
     }
 
-    public char getIndentificacionCliente() {
-        return indentificacionCliente;
+    public int getIdentificacionCliente() {
+        return identificacionCliente;
     }
 
-    public void setIndentificacionCliente(char indentificacionCliente) {
-        this.indentificacionCliente = indentificacionCliente;
+    public void setIdentificacionCliente(int identificacionCliente) {
+        this.identificacionCliente = identificacionCliente;
     }
    
    

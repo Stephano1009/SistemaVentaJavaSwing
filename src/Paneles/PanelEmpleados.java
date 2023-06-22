@@ -19,7 +19,6 @@ public class PanelEmpleados extends javax.swing.JPanel {
     EmpleadoDao daoEmpleado = new EmpleadoDao();
     DefaultTableModel modeloEmpleado = new DefaultTableModel();
     UsuarioDao daoUsuario = new UsuarioDao();
-    Empleado emp = new Empleado();
 
     private PanelRegistroEmpleado panelRegistroEmpleado;
 
@@ -154,7 +153,8 @@ public class PanelEmpleados extends javax.swing.JPanel {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    
     private void btnNuevoEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoEmpleadoActionPerformed
         PanelRegistroEmpleado panelRegistroEmpleado = new PanelRegistroEmpleado();
         panelRegistroEmpleado.btnActualizarEmpleado.setEnabled(false);
@@ -216,9 +216,6 @@ public class PanelEmpleados extends javax.swing.JPanel {
         
         int anchoEstado = calcularAnchoMaximoContenido(tabla, 6);
         columnModel.getColumn(6).setPreferredWidth(anchoEstado);
-        
-        
-      
     }
 
     private int calcularAnchoMaximoContenido(JTable tabla, int indiceColumna) {
