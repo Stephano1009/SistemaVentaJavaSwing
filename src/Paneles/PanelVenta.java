@@ -1,8 +1,10 @@
 package Paneles;
 
 import Clases.Cliente;
+import Clases.Comprobante;
 import Clases.Pago;
 import Consultas.ClienteDao;
+import Consultas.ComprobanteDao;
 import Consultas.PagoDao;
 import java.util.List;
 import javax.swing.JComboBox;
@@ -10,16 +12,17 @@ import javax.swing.JComboBox;
 public class PanelVenta extends javax.swing.JPanel {
     
     
-    Pago pa = new Pago();
+
     PagoDao daoPago = new PagoDao();
-    Cliente cli = new Cliente();
     ClienteDao daoCliente = new ClienteDao();
+    ComprobanteDao daoComprobante = new ComprobanteDao();
+       
     
     public PanelVenta() {
         initComponents();
         CargarCliente();
+        CargarComprobante();
         CargarPago();
-        
     }
     
     public void CargarPago() {
@@ -35,14 +38,27 @@ public class PanelVenta extends javax.swing.JPanel {
             cboClienteVenta.addItem(ClienteVen.getNombreCliente());
         }
     }
+    public void CargarComprobante() {
+        List<Comprobante> listaComprobante = daoComprobante.listarComprobante();
+        for (Comprobante ComproVen : listaComprobante) {
+            cboCompVenta.addItem(ComproVen.getTipoComprobante());
+        }
+    }
     
-    public JComboBox getCboPagoVenta() {
+    public JComboBox getCboClienteVenta() {
         return cboClienteVenta;
     }
     
     public JComboBox getCboMetodoVenta() {
         return cboMetodoVenta;
     }
+    
+    public JComboBox getcboComprobanteVenta() {
+        return cboCompVenta;
+    }
+    
+    
+    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

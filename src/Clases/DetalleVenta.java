@@ -1,16 +1,16 @@
 package Clases;
 
-public class Reporte {
+public class DetalleVenta {
     int idDetalleVenta;
     int idVenta;
     int idProducto;
     int cantidad;
     double precioVenta;
 
-    public Reporte() {
+    public DetalleVenta() {
     }
 
-    public Reporte(int idDetalleVenta, int idVenta, int idProducto, int cantidad, double precioVenta) {
+    public DetalleVenta(int idDetalleVenta, int idVenta, int idProducto, int cantidad, double precioVenta) {
         this.idDetalleVenta = idDetalleVenta;
         this.idVenta = idVenta;
         this.idProducto = idProducto;

@@ -1,5 +1,5 @@
 package Consultas;
 
-public class ReporteDao {
+public class DetalleDao {
     
 }

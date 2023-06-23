@@ -3,27 +3,26 @@ package Clases;
 import java.time.LocalDate;
 
 public class Venta {
+
     int idVenta;
-    int serie;
+    String serie;
     String numeroCorrelativo;
-    char tipoDocumento;
+    int idComprobante;
     int idEmpleado;
     int idCliente;
-    int idMetodoPago;
     LocalDate fechaVenta;
     boolean estadoVenta;
 
     public Venta() {
     }
 
-    public Venta(int idVenta, int serie, String numeroCorrelativo, char tipoDocumento, int idEmpleado, int idCliente, int idMetodoPago, LocalDate fechaVenta, boolean estadoVenta) {
+    public Venta(int idVenta, String serie, String numeroCorrelativo, int idComprobante, int idEmpleado, int idCliente, LocalDate fechaVenta, boolean estadoVenta) {
         this.idVenta = idVenta;
         this.serie = serie;
         this.numeroCorrelativo = numeroCorrelativo;
-        this.tipoDocumento = tipoDocumento;
+        this.idComprobante = idComprobante;
         this.idEmpleado = idEmpleado;
         this.idCliente = idCliente;
-        this.idMetodoPago = idMetodoPago;
         this.fechaVenta = fechaVenta;
         this.estadoVenta = estadoVenta;
     }
@@ -36,11 +35,11 @@ public class Venta {
         this.idVenta = idVenta;
     }
 
-    public int getSerie() {
+    public String getSerie() {
         return serie;
     }
 
-    public void setSerie(int serie) {
+    public void setSerie(String serie) {
         this.serie = serie;
     }
 
@@ -52,12 +51,12 @@ public class Venta {
         this.numeroCorrelativo = numeroCorrelativo;
     }
 
-    public char getTipoDocumento() {
-        return tipoDocumento;
+    public int getIdComprobante() {
+        return idComprobante;
     }
 
-    public void setTipoDocumento(char tipoDocumento) {
-        this.tipoDocumento = tipoDocumento;
+    public void setIdComprobante(int idComprobante) {
+        this.idComprobante = idComprobante;
     }
 
     public int getIdEmpleado() {
@@ -74,14 +73,6 @@ public class Venta {
 
     public void setIdCliente(int idCliente) {
         this.idCliente = idCliente;
-    }
-
-    public int getIdMetodoPago() {
-        return idMetodoPago;
-    }
-
-    public void setIdMetodoPago(int idMetodoPago) {
-        this.idMetodoPago = idMetodoPago;
     }
 
     public LocalDate getFechaVenta() {
