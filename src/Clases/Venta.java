@@ -1,32 +1,22 @@
 package Clases;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Venta {
 
     int idVenta;
     String serie;
     String numeroCorrelativo;
-    int idComprobante;
+    String tipoComprobante;
+    int idMetodoPago;
     int idEmpleado;
     int idCliente;
     LocalDate fechaVenta;
     boolean estadoVenta;
-
-    public Venta() {
-    }
-
-    public Venta(int idVenta, String serie, String numeroCorrelativo, int idComprobante, int idEmpleado, int idCliente, LocalDate fechaVenta, boolean estadoVenta) {
-        this.idVenta = idVenta;
-        this.serie = serie;
-        this.numeroCorrelativo = numeroCorrelativo;
-        this.idComprobante = idComprobante;
-        this.idEmpleado = idEmpleado;
-        this.idCliente = idCliente;
-        this.fechaVenta = fechaVenta;
-        this.estadoVenta = estadoVenta;
-    }
-
+    
+    private List<DetalleVenta> detalles;
+    
     public int getIdVenta() {
         return idVenta;
     }
@@ -51,12 +41,20 @@ public class Venta {
         this.numeroCorrelativo = numeroCorrelativo;
     }
 
-    public int getIdComprobante() {
-        return idComprobante;
+    public String getTipoComprobante() {
+        return tipoComprobante;
     }
 
-    public void setIdComprobante(int idComprobante) {
-        this.idComprobante = idComprobante;
+    public void setTipoComprobante(String tipoComprobante) {
+        this.tipoComprobante = tipoComprobante;
+    }
+
+    public int getIdMetodoPago() {
+        return idMetodoPago;
+    }
+
+    public void setIdMetodoPago(int idMetodoPago) {
+        this.idMetodoPago = idMetodoPago;
     }
 
     public int getIdEmpleado() {
@@ -89,6 +87,14 @@ public class Venta {
 
     public void setEstadoVenta(boolean estadoVenta) {
         this.estadoVenta = estadoVenta;
+    }
+
+    public List<DetalleVenta> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(List<DetalleVenta> detalles) {
+        this.detalles = detalles;
     }
     
     

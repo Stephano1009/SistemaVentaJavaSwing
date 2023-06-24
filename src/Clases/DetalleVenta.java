@@ -7,17 +7,6 @@ public class DetalleVenta {
     int cantidad;
     double precioVenta;
 
-    public DetalleVenta() {
-    }
-
-    public DetalleVenta(int idDetalleVenta, int idVenta, int idProducto, int cantidad, double precioVenta) {
-        this.idDetalleVenta = idDetalleVenta;
-        this.idVenta = idVenta;
-        this.idProducto = idProducto;
-        this.cantidad = cantidad;
-        this.precioVenta = precioVenta;
-    }
-
     public int getIdDetalleVenta() {
         return idDetalleVenta;
     }

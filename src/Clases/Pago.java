@@ -5,15 +5,6 @@ public class Pago {
     String nombrePago;
     boolean estadoPago;
 
-    public Pago() {
-    }
-
-    public Pago(int idMetodoPago, String nombrePago, boolean estadoPago) {
-        this.idMetodoPago = idMetodoPago;
-        this.nombrePago = nombrePago;
-        this.estadoPago = estadoPago;
-    }
-
     public int getIdMetodoPago() {
         return idMetodoPago;
     }
