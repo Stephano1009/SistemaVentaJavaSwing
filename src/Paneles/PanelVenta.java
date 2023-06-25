@@ -557,7 +557,7 @@ public class PanelVenta extends javax.swing.JPanel {
                 }
                 venta.setDetalles(detalleVentas);
             } else {
-                JOptionPane.showMessageDialog(null, "No hay registros en la tabla payaso", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "No hay registros en la tabla", "Error", JOptionPane.ERROR_MESSAGE);
             }
             try {
                 ventaDao.registrar(venta);

@@ -152,40 +152,6 @@ public class VentaDao {
         return nombrePago;
     }
 
-//    public void registrar(Venta venta) throws Exception {
-//        int codigoVenta;
-//        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-//        String fechaFormateada = formato.format(venta.getFechaVenta());
-//        String sql = "insert into venta(serie,numeroCorrelativo, tipoComprobante,"
-//                + "fechaVenta,idMetodoPago,idEmpleado, idCliente, estadoVenta, total)"
-//                + "values('" + venta.getSerie() + "', '"
-//                + venta.getNumeroCorrelativo() + "', '"
-//                + venta.getTipoComprobante() + "', '"
-//                + fechaFormateada + "', " 
-//                + venta.getIdMetodoPago() + ", "
-//                + venta.getIdEmpleado() + ", "
-//                + venta.getIdCliente() + ", "
-//                + (venta.isEstadoVenta() == true ? "1" : "0") + ", "
-//                + venta.getTotal() + ")";
-//        try {
-//            con = conectar.getConnection();
-//            ps = con.prepareStatement(sql);
-//            ps.executeUpdate();
-//            rs = ps.executeQuery("select @@IDENTITY AS Codigo"); //obtiene el codigo generado
-//            codigoVenta = rs.getInt("Codigo");
-//            for (DetalleVenta detalle : venta.getDetalles()) {
-//                sql = "insert into detalleventa (idVenta, idProducto,cantidad,precioVenta)"
-//                        + "values ("+ codigoVenta +", "+ detalle.getIdProducto()+","
-//                        + " "+ detalle.getCantidad() + ", "+ detalle.getPrecioVenta()+")";
-//                rs = ps.executeQuery(sql);
-//                sql = "update producto set stockProducto = (stockProducto - "+ detalle.getCantidad()+ ")"
-//                        + "where idProducto = " + detalle.getIdProducto();
-//                rs = ps.executeQuery(sql);
-//            }
-//        } catch (Exception e) {
-//            throw e;
-//        }
-//    }
     public void registrar(Venta venta) throws SQLException, Exception {
         int codigoVenta;
         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
@@ -209,7 +175,7 @@ public class VentaDao {
 
             // Obtener el ID de venta generado
             stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT @@IDENTITY AS Codigo");
+            rs = stmt.executeQuery("SELECT @@IDENTITY AS Codigo");
             if (rs.next()) {
                 codigoVenta = rs.getInt("Codigo");
 
