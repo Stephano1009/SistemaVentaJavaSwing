@@ -8,12 +8,12 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class PanelReporte extends javax.swing.JPanel {
+public class PanelDetalle extends javax.swing.JPanel {
     
     VentaDao daoVenta = new VentaDao();
     DefaultTableModel modeloReporte = new DefaultTableModel();
-    
-    public PanelReporte() {
+
+    public PanelDetalle() {
         initComponents();
         listarVentas(TablaReportes);
     }
@@ -31,7 +31,7 @@ public class PanelReporte extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Book Antiqua", 0, 14)); // NOI18N
-        jLabel1.setText("SECCIÓN DE REPORTES");
+        jLabel1.setText("SECCIÓN REGISTRO DE VENTA");
 
         TablaReportes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -46,6 +46,11 @@ public class PanelReporte extends javax.swing.JPanel {
         btnVerReporte.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnVerReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/reporte Venta.png"))); // NOI18N
         btnVerReporte.setText("VER REPORTES");
+        btnVerReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerReporteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -87,6 +92,11 @@ public class PanelReporte extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+
+    private void btnVerReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerReporteActionPerformed
+        
+    }//GEN-LAST:event_btnVerReporteActionPerformed
+
     public void listarVentas(JTable tabla) {
         modeloReporte = (DefaultTableModel) tabla.getModel();
         List<Venta> listaVenta = daoVenta.listarVenta();
@@ -104,15 +114,15 @@ public class PanelReporte extends javax.swing.JPanel {
         for (int i = 0; i < listaVenta.size(); i++) {
             object[0] = listaVenta.get(i).getIdVenta();
             object[1] = listaVenta.get(i).getTipoComprobante();
-            
+
             int idMetodoPago = listaVenta.get(i).getIdMetodoPago();
             String nombrePago = daoVenta.obtenerNombrePagoPorId(idMetodoPago);
             object[2] = nombrePago;
-            
+
             int idEmpleado = listaVenta.get(i).getIdEmpleado();
             String nombreEmpleado = daoVenta.obtenerNombreEmpleadoPorId(idEmpleado);
             object[3] = nombreEmpleado;
-            
+
             int idCliente = listaVenta.get(i).getIdCliente();
             String nombreCliente = daoVenta.obtenerNombreClientePorId(idCliente);
             object[4] = nombreCliente;
@@ -122,8 +132,8 @@ public class PanelReporte extends javax.swing.JPanel {
         }
         TablaReportes.setModel(modeloReporte);
     }
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTable TablaReportes;
     public javax.swing.JButton btnVerReporte;

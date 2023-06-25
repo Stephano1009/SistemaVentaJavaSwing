@@ -7,9 +7,12 @@ import Clases.Venta;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.time.LocalDate;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
 public class VentaDao {
 
@@ -17,7 +20,7 @@ public class VentaDao {
     Connection con;
     PreparedStatement ps;
     ResultSet rs;
-
+    Statement stmt;
     /*
     Creamos el metodo para obtener el valor del último correlativo
     de una venta almacenada en la base de datos
@@ -89,9 +92,7 @@ public class VentaDao {
                 v.setIdMetodoPago(rs.getInt("idMetodoPago"));
                 v.setIdEmpleado(rs.getInt("idEmpleado"));
                 v.setIdCliente(rs.getInt("idCliente"));
-                java.sql.Date sqlFechaVenta = rs.getDate("fechaVenta");
-                LocalDate fechaVenta = sqlFechaVenta.toLocalDate();
-                v.setFechaVenta(fechaVenta);
+                v.setFechaVenta(rs.getDate("fechaVenta"));
                 v.setEstadoVenta(rs.getBoolean("estadoVenta"));
                 ReporteVenta.add(v);
             }
@@ -99,7 +100,7 @@ public class VentaDao {
         }
         return ReporteVenta;
     }
-    
+
     public String obtenerNombreEmpleadoPorId(int idEmpleado) {
         String nombreEmpleado = null;
         String sql = "SELECT nombreEmpleado FROM Empleado WHERE idEmpleado = ?";
@@ -113,10 +114,10 @@ public class VentaDao {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
         return nombreEmpleado;
     }
-    
+
     public String obtenerNombreClientePorId(int idCliente) {
         String nombreCliente = null;
         String sql = "SELECT nombreCliente FROM Cliente WHERE idCliente = ?";
@@ -130,10 +131,10 @@ public class VentaDao {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
         return nombreCliente;
     }
-    
+
     public String obtenerNombrePagoPorId(int idMetodoPago) {
         String nombrePago = null;
         String sql = "SELECT nombrePago FROM metodopago WHERE idMetodoPago = ?";
@@ -147,34 +148,125 @@ public class VentaDao {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } 
+        }
         return nombrePago;
     }
-    
-    public void registrar(Venta venta) throws Exception{
+
+//    public void registrar(Venta venta) throws Exception {
+//        int codigoVenta;
+//        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+//        String fechaFormateada = formato.format(venta.getFechaVenta());
+//        String sql = "insert into venta(serie,numeroCorrelativo, tipoComprobante,"
+//                + "fechaVenta,idMetodoPago,idEmpleado, idCliente, estadoVenta, total)"
+//                + "values('" + venta.getSerie() + "', '"
+//                + venta.getNumeroCorrelativo() + "', '"
+//                + venta.getTipoComprobante() + "', '"
+//                + fechaFormateada + "', " 
+//                + venta.getIdMetodoPago() + ", "
+//                + venta.getIdEmpleado() + ", "
+//                + venta.getIdCliente() + ", "
+//                + (venta.isEstadoVenta() == true ? "1" : "0") + ", "
+//                + venta.getTotal() + ")";
+//        try {
+//            con = conectar.getConnection();
+//            ps = con.prepareStatement(sql);
+//            ps.executeUpdate();
+//            rs = ps.executeQuery("select @@IDENTITY AS Codigo"); //obtiene el codigo generado
+//            codigoVenta = rs.getInt("Codigo");
+//            for (DetalleVenta detalle : venta.getDetalles()) {
+//                sql = "insert into detalleventa (idVenta, idProducto,cantidad,precioVenta)"
+//                        + "values ("+ codigoVenta +", "+ detalle.getIdProducto()+","
+//                        + " "+ detalle.getCantidad() + ", "+ detalle.getPrecioVenta()+")";
+//                rs = ps.executeQuery(sql);
+//                sql = "update producto set stockProducto = (stockProducto - "+ detalle.getCantidad()+ ")"
+//                        + "where idProducto = " + detalle.getIdProducto();
+//                rs = ps.executeQuery(sql);
+//            }
+//        } catch (Exception e) {
+//            throw e;
+//        }
+//    }
+    public void registrar(Venta venta) throws SQLException, Exception {
         int codigoVenta;
-        String sql = "insert into venta(serie,numeroCorrelativo, tipoComprobante,"
-                + "fechaVenta,idMetodoPago,idEmpleado, idCliente, estadoVenta)"
-                + "values('"+ venta.getSerie()+ "', '"+ venta.getNumeroCorrelativo() +"',"
-                + "'"+ venta.getFechaVenta()+ "','"+ venta.getIdMetodoPago() + "',"
-                + "'"+ venta.getIdEmpleado()+ "','"+ venta.getIdCliente() +"',"
-                + "'"+ venta.isEstadoVenta()+"')";
+        SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaFormateada = formato.format(venta.getFechaVenta());
+        String sql = "insert into venta(serie, numeroCorrelativo, tipoComprobante, fechaVenta, idMetodoPago, idEmpleado, idCliente, estadoVenta, total) "
+                + "values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try {
             con = conectar.getConnection();
             ps = con.prepareStatement(sql);
-            rs = ps.executeQuery("select @@IDENTITY AS Codigo"); //obtiene el codigo generado
-            codigoVenta = rs.getInt("Codigo");
-            for (DetalleVenta detalle : venta.getDetalles()) {
-                sql = "insert into detalleventa (idVenta, idProducto,cantidad,precioVenta)"
-                        + "values ("+ codigoVenta +", "+ detalle.getIdProducto()+","
-                        + " "+ detalle.getCantidad() + ", "+ detalle.getPrecioVenta()+")";
-                rs = ps.executeQuery(sql);
-                sql = "update producto set stockProducto = (stockProducto - "+ detalle.getCantidad()+ ")"
-                        + "where idProducto = " + detalle.getIdProducto();
-                rs = ps.executeQuery(sql);
+            ps.setString(1, venta.getSerie());
+            ps.setString(2, venta.getNumeroCorrelativo());
+            ps.setString(3, venta.getTipoComprobante());
+            ps.setString(4, fechaFormateada);
+            ps.setInt(5, venta.getIdMetodoPago());
+            ps.setInt(6, venta.getIdEmpleado());
+            ps.setInt(7, venta.getIdCliente());
+            ps.setInt(8, venta.isEstadoVenta() ? 1 : 0);
+            ps.setDouble(9, venta.getTotal());
+            ps.executeUpdate();
+
+            // Obtener el ID de venta generado
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT @@IDENTITY AS Codigo");
+            if (rs.next()) {
+                codigoVenta = rs.getInt("Codigo");
+
+                for (DetalleVenta detalle : venta.getDetalles()) {
+                    sql = "insert into detalleventa (idVenta, idProducto, cantidad, precioVenta) "
+                            + "values (?, ?, ?, ?)";
+                    ps = con.prepareStatement(sql);
+                    ps.setInt(1, codigoVenta);
+                    ps.setInt(2, detalle.getIdProducto());
+                    ps.setInt(3, detalle.getCantidad());
+                    ps.setDouble(4, detalle.getPrecioVenta());
+                    ps.executeUpdate();
+
+                    sql = "update producto set stockProducto = (stockProducto - ?) where idProducto = ?";
+                    ps = con.prepareStatement(sql);
+                    ps.setInt(1, detalle.getCantidad());
+                    ps.setInt(2, detalle.getIdProducto());
+                    ps.executeUpdate();
+                }
+            } else {
+                throw new SQLException("No se pudo obtener el ID de venta generado.");
             }
+        } catch (SQLException e) {
+            throw e;
         } catch (Exception e) {
             throw e;
+        } finally {
+            // Cerrar recursos (ResultSet, PreparedStatement, Statement, Connection) en el bloque finally
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    // Manejar error al cerrar ResultSet
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    // Manejar error al cerrar PreparedStatement
+                }
+            }
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException ex) {
+                    // Manejar error al cerrar Statement
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException e) {
+                    // Manejar error al cerrar Connection
+                }
+            }
         }
     }
+
 }

@@ -36,14 +36,15 @@ public class ClienteDao {
     
     public int agregarCli(Cliente cli) {
         String sql = "INSERT INTO cliente (nombreCliente, apellidoCliente, identificacionCliente) VALUES (?, ?, ?)";
-        try (Connection con = conectar.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = conectar.getConnection(); 
+                PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, cli.getNombreCliente());
             ps.setString(2, cli.getApellidoCliente());
             ps.setInt(3, cli.getIdentificacionCliente());
             ps.executeUpdate();
             return 1; // Retorna 1 si se agrega correctamente
         } catch (Exception e) {
-            e.printStackTrace();
+            e.getMessage();
             return 0; // Retorna 0 en caso de error
         }
     }

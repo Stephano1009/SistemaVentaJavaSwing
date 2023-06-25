@@ -1,6 +1,6 @@
 package Clases;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 public class Venta {
@@ -12,8 +12,9 @@ public class Venta {
     int idMetodoPago;
     int idEmpleado;
     int idCliente;
-    LocalDate fechaVenta;
+    Date fechaVenta;
     boolean estadoVenta;
+    double total;
     
     private List<DetalleVenta> detalles;
     
@@ -73,11 +74,11 @@ public class Venta {
         this.idCliente = idCliente;
     }
 
-    public LocalDate getFechaVenta() {
+    public Date getFechaVenta() {
         return fechaVenta;
     }
 
-    public void setFechaVenta(LocalDate fechaVenta) {
+    public void setFechaVenta(Date fechaVenta) {
         this.fechaVenta = fechaVenta;
     }
 
@@ -95,6 +96,14 @@ public class Venta {
 
     public void setDetalles(List<DetalleVenta> detalles) {
         this.detalles = detalles;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
     
     

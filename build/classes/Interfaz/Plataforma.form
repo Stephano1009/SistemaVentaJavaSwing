@@ -379,7 +379,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/imagenes/Menu Reportes.png"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="REPORTE DE VENTA"/>
+                <Property name="text" type="java.lang.String" value="DETALLE REGISTRO"/>
                 <Property name="horizontalAlignment" type="int" value="2"/>
                 <Property name="horizontalTextPosition" type="int" value="4"/>
               </Properties>

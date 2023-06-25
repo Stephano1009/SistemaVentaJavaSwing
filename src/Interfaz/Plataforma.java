@@ -7,7 +7,7 @@ import Paneles.PanelEmpleados;
 import Paneles.PanelPago;
 import Paneles.PanelProducto;
 import Paneles.PanelProveedor;
-import Paneles.PanelReporte;
+import Paneles.PanelDetalle;
 import Paneles.PanelUsuario;
 import Paneles.PanelVenta;
 import javax.swing.JOptionPane;
@@ -174,7 +174,7 @@ public class Plataforma extends javax.swing.JFrame {
         btnReporte.setBackground(new java.awt.Color(255, 255, 255));
         btnReporte.setFont(new java.awt.Font("Georgia", 0, 12)); // NOI18N
         btnReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Menu Reportes.png"))); // NOI18N
-        btnReporte.setText("REPORTE DE VENTA");
+        btnReporte.setText("DETALLE REGISTRO");
         btnReporte.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         btnReporte.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         btnReporte.addActionListener(new java.awt.event.ActionListener() {
@@ -366,7 +366,7 @@ public class Plataforma extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNuevaVentaActionPerformed
 
     private void btnReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReporteActionPerformed
-        cambiaPanel.cambiarPanel(new PanelReporte());
+        cambiaPanel.cambiarPanel(new PanelDetalle());
     }//GEN-LAST:event_btnReporteActionPerformed
 
     /**
