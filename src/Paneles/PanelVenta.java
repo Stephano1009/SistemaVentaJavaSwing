@@ -215,6 +215,11 @@ public class PanelVenta extends javax.swing.JPanel {
         btnEliminarRegistro.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnEliminarRegistro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/cancelado.png"))); // NOI18N
         btnEliminarRegistro.setText("ELIMINAR REGISTRO");
+        btnEliminarRegistro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarRegistroActionPerformed(evt);
+            }
+        });
 
         jLabel12.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jLabel12.setText("TOTAL A PAGAR");
@@ -481,6 +486,13 @@ public class PanelVenta extends javax.swing.JPanel {
             // Seteamos el valor total
             this.calcularTotalAPagar();
 
+            this.txtNombreProducto.setText("");
+            this.txtIdProducto.setText("");
+            this.txtStockProducto.setText("");
+            this.txtPrecioVenta.setText("");
+            this.txtCantidadVenta.setText("");
+            this.txtNombreProducto.requestFocus();
+
         }
     }//GEN-LAST:event_btnAgregarVentaActionPerformed
 
@@ -579,6 +591,19 @@ public class PanelVenta extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_btnRegistrarVentaActionPerformed
+
+    private void btnEliminarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarRegistroActionPerformed
+        int filaSeleccionada = TablaDetalleVenta.getSelectedRow();
+        if (filaSeleccionada >= 0) {
+            modeloDetalleVenta.removeRow(filaSeleccionada);
+            calcularTotalAPagar();
+            if (modeloDetalleVenta.getRowCount() == 0) {
+                this.txtTotalVenta.setText("");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un registro de la tabla", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEliminarRegistroActionPerformed
 
     public List<String> validarCampos() {
         List<String> mensajesError = new ArrayList<>();
