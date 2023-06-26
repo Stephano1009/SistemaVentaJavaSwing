@@ -36,6 +36,7 @@ public class PanelVenta extends javax.swing.JPanel {
         CargarPago(); //Carga los datos en el combo de pago
         cargarCorrelativoSerie();
         validarNombreProductoObtenido();
+        validarCantidadObtenida();
     }
 
     public void CargarCliente() {
@@ -390,40 +391,32 @@ public class PanelVenta extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    int stockProductoActual; // Variable para almacenar el stock actual del producto
+
     private void btnProductoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductoVentaActionPerformed
-        if (validarNombreProducto() == false) {
-            JOptionPane.showMessageDialog(null, "¡Debe ingresar el nombre del producto!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        } else {
-            String nombreProducto = this.txtNombreProducto.getText();
-            if (nombreProducto != null) {
-                try {
-                    Producto pro = this.ventaDao.obtenerProducto(nombreProducto);
-                    if (pro != null) {
-                        double precioPro = pro.getPrecioProducto();
-                        int stockPro = pro.getStockProducto();
-                        /*Convertimos el precio del producto a una cadena de texto*/
-                        String precioString = String.valueOf(precioPro);
-                        this.txtPrecioVenta.setText(precioString);
-                        String StockString = String.valueOf(stockPro);
-                        this.txtStockProducto.setText(StockString);
-                        this.txtIdProducto.setText(String.valueOf(pro.getIdProducto()));
-                    } else {
-                        JOptionPane.showMessageDialog(null, "El producto no existe.", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (Exception e) {
-                    System.out.println("Ocurrio un error durante la obtencion: " + e.getLocalizedMessage());
+        String nombreProducto = this.txtNombreProducto.getText();
+        if (nombreProducto != null) {
+            try {
+                Producto pro = this.ventaDao.obtenerProducto(nombreProducto);
+                if (pro != null) {
+                    double precioPro = pro.getPrecioProducto();
+                    //int stockPro = pro.getStockProducto();
+                    stockProductoActual = pro.getStockProducto(); // Almacenar el stock actual
+                    /*Convertimos el precio del producto a una cadena de texto*/
+                    String precioString = String.valueOf(precioPro);
+                    this.txtPrecioVenta.setText(precioString);
+                    //String StockString = String.valueOf(stockPro);
+                    String StockString = String.valueOf(stockProductoActual);
+                    this.txtStockProducto.setText(StockString);
+                    this.txtIdProducto.setText(String.valueOf(pro.getIdProducto()));
+                } else {
+                    JOptionPane.showMessageDialog(null, "El producto no existe.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            } catch (Exception e) {
+                System.out.println("Ocurrio un error durante la obtencion: " + e.getLocalizedMessage());
             }
         }
     }//GEN-LAST:event_btnProductoVentaActionPerformed
-
-    private boolean validarNombreProducto() {
-        if (txtNombreProducto.getText().isEmpty()) {
-            return false;
-        }
-        return true;
-    }
 
     public void validarNombreProductoObtenido() {
         ((AbstractDocument) txtNombreProducto.getDocument()).setDocumentFilter(new DocumentFilter() {
@@ -452,48 +445,84 @@ public class PanelVenta extends javax.swing.JPanel {
         });
     }
 
+    public void validarCantidadObtenida() {
+        ((AbstractDocument) txtCantidadVenta.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("-?\\d{0,8}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("-?\\d{0,8}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+    }
+
     private void actualizarContador() {
         contador++;
     }
 
     private void btnAgregarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarVentaActionPerformed
-        if (validarIngresoCantidad() == false) {
-            JOptionPane.showMessageDialog(null, "¡Debe ingresar la cantidad que desea llevar!", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        } else {
-            int idProducto = Integer.parseInt(this.txtIdProducto.getText());
-            String producto = this.txtNombreProducto.getText();
-            int cantidadProducto = Integer.parseInt(this.txtCantidadVenta.getText());
-            double precioProducto = Double.parseDouble(this.txtPrecioVenta.getText());
-            double totalVenta = cantidadProducto * precioProducto;
+        int idProducto = Integer.parseInt(this.txtIdProducto.getText());
+        String producto = this.txtNombreProducto.getText();
+        int cantidadProducto = Integer.parseInt(this.txtCantidadVenta.getText());
+        double precioProducto = Double.parseDouble(this.txtPrecioVenta.getText());
+        double totalVenta = cantidadProducto * precioProducto;
 
-            // Actualizar el contador
-            actualizarContador();
-
-            // Creamos un objeto DefaultTableCellRenderer para centrar el contenido
-            DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-            centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-            JTable tabla = TablaDetalleVenta;
-            int columnCount = tabla.getColumnCount();
-            for (int i = 0; i < columnCount; i++) {
-                tabla.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-            }
-
-            Object[] DatosDeFila = {contador, idProducto, producto, cantidadProducto, precioProducto, totalVenta}; // Incluye el total en el arreglo
-            modeloDetalleVenta = (DefaultTableModel) tabla.getModel();
-            modeloDetalleVenta.addRow(DatosDeFila);
-
-            // Seteamos el valor total
-            this.calcularTotalAPagar();
-
-            this.txtNombreProducto.setText("");
-            this.txtIdProducto.setText("");
-            this.txtStockProducto.setText("");
-            this.txtPrecioVenta.setText("");
-            this.txtCantidadVenta.setText("");
-            this.txtNombreProducto.requestFocus();
-
+        // Verificar si la cantidad ingresada es menor o igual a 0
+        if (cantidadProducto <= 0) {
+            JOptionPane.showMessageDialog(null, "Debes ingresar una cantidad mayor a 0", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Detener la ejecución del método
         }
+
+        // Verificar si la cantidad a vender supera el stock actual
+        if (cantidadProducto > stockProductoActual) {
+            JOptionPane.showMessageDialog(null, "No cuentas con el stock suficiente", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Detener la ejecución del método
+        }
+
+        // Restar la cantidad vendida al stock actual
+        stockProductoActual -= cantidadProducto;
+
+        // Actualizar el contador
+        actualizarContador();
+
+        // Creamos un objeto DefaultTableCellRenderer para centrar el contenido
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        JTable tabla = TablaDetalleVenta;
+        int columnCount = tabla.getColumnCount();
+        for (int i = 0; i < columnCount; i++) {
+            tabla.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
+        Object[] DatosDeFila = {contador, idProducto, producto, cantidadProducto, precioProducto, totalVenta}; // Incluye el total en el arreglo
+        modeloDetalleVenta = (DefaultTableModel) tabla.getModel();
+        modeloDetalleVenta.addRow(DatosDeFila);
+
+        // Seteamos el valor total
+        this.calcularTotalAPagar();
+
+        // Limpiar los campos de texto
+        txtNombreProducto.setText("");
+        txtIdProducto.setText("");
+        txtStockProducto.setText("");
+        txtPrecioVenta.setText("");
+        txtCantidadVenta.setText("");
     }//GEN-LAST:event_btnAgregarVentaActionPerformed
 
     public String firstNChars(String str, int n) {
@@ -571,7 +600,6 @@ public class PanelVenta extends javax.swing.JPanel {
             try {
                 ventaDao.registrar(venta);
                 JOptionPane.showMessageDialog(null, "Venta Registrada con Éxito");
-
                 // Limpiar los campos de texto
                 this.txtStockProducto.setText("");
                 this.txtNombreProducto.setText("");
@@ -614,43 +642,13 @@ public class PanelVenta extends javax.swing.JPanel {
         if (cboMetodoVenta.getSelectedIndex() == 0) {
             mensajesError.add("Falta seleccionar el método de venta.");
         }
-        if (txtNombreProducto.getText().isEmpty()) {
-            mensajesError.add("Falta ingresar el nombre del producto.");
-        }
-        if (txtCantidadVenta.getText().isEmpty()) {
-            mensajesError.add("Falta ingresar la cantidad de venta.");
-        }
-
+//        if (txtNombreProducto.getText().isEmpty()) {
+//            mensajesError.add("Falta ingresar el nombre del producto.");
+//        }
+//        if (txtCantidadVenta.getText().isEmpty()) {
+//            mensajesError.add("Falta ingresar la cantidad de venta.");
+//        }
         return mensajesError;
-    }
-
-    public void validarCamposVenta() {
-        if (cboClienteVenta.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "¡Debe Seleccionar un cliente!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        if (cboMetodoVenta.getSelectedIndex() == 0) {
-            JOptionPane.showMessageDialog(null, "¡Debe Seleccionar un método de pago!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        if (txtNombreProducto.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "¡Falta ingresar el nombre del producto!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        if (txtCantidadVenta.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "¡Falta digitar la cantidad que va a llevar!", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public boolean validarComboCliente() {
-        if (cboClienteVenta.getSelectedIndex() == 0) {
-            return false;
-        }
-        return false;
-    }
-
-    public boolean validarIngresoCantidad() {
-        if (txtCantidadVenta.getText().isEmpty()) {
-            return false;
-        }
-        return true;
     }
 
     private void calcularTotalAPagar() {
