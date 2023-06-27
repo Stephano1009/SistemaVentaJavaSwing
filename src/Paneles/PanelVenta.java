@@ -394,6 +394,12 @@ public class PanelVenta extends javax.swing.JPanel {
     int stockProductoActual; // Variable para almacenar el stock actual del producto
 
     private void btnProductoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductoVentaActionPerformed
+        //Verificar si el campo de nombreProdcuto esta vacío
+        if(txtNombreProducto.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Debes ingresar el nombre del producto", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Detener la ejecución del método
+        }
+        
         String nombreProducto = this.txtNombreProducto.getText();
         if (nombreProducto != null) {
             try {
@@ -477,6 +483,14 @@ public class PanelVenta extends javax.swing.JPanel {
     }
 
     private void btnAgregarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarVentaActionPerformed
+        String cantidadVentaText = this.txtCantidadVenta.getText();
+
+        // Verificar si el campo de cantidad está vacío
+        if (cantidadVentaText.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debes ingresar la cantidad de venta", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Detener la ejecución del método
+        }
+
         int idProducto = Integer.parseInt(this.txtIdProducto.getText());
         String producto = this.txtNombreProducto.getText();
         int cantidadProducto = Integer.parseInt(this.txtCantidadVenta.getText());
@@ -600,6 +614,10 @@ public class PanelVenta extends javax.swing.JPanel {
             try {
                 ventaDao.registrar(venta);
                 JOptionPane.showMessageDialog(null, "Venta Registrada con Éxito");
+                // Actualizar el contador
+                contador = 0; // Reiniciar el contador a 0
+                // Actualizar el correlativo
+                cargarCorrelativoSerie();
                 // Limpiar los campos de texto
                 this.txtStockProducto.setText("");
                 this.txtNombreProducto.setText("");
@@ -625,6 +643,10 @@ public class PanelVenta extends javax.swing.JPanel {
         if (filaSeleccionada >= 0) {
             modeloDetalleVenta.removeRow(filaSeleccionada);
             calcularTotalAPagar();
+
+            // Actualizar el contador
+            contador = modeloDetalleVenta.getRowCount(); // Actualizar el contador con la cantidad de filas en el modelo
+
             if (modeloDetalleVenta.getRowCount() == 0) {
                 this.txtTotalVenta.setText("");
             }
