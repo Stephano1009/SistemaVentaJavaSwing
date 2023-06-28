@@ -119,7 +119,7 @@ public class PanelVenta extends javax.swing.JPanel {
         txtCorrelativoVenta = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtNombreProducto = new javax.swing.JTextField();
-        btnProductoVenta = new javax.swing.JButton();
+        btnBuscarProducto = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
         txtPrecioVenta = new javax.swing.JTextField();
         txtCantidadVenta = new javax.swing.JTextField();
@@ -169,11 +169,11 @@ public class PanelVenta extends javax.swing.JPanel {
         jLabel7.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jLabel7.setText("INGRESE EL PRODUCTO");
 
-        btnProductoVenta.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
-        btnProductoVenta.setText("BUSCAR PRODUCTO");
-        btnProductoVenta.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscarProducto.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
+        btnBuscarProducto.setText("BUSCAR PRODUCTO");
+        btnBuscarProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProductoVentaActionPerformed(evt);
+                btnBuscarProductoActionPerformed(evt);
             }
         });
 
@@ -201,7 +201,15 @@ public class PanelVenta extends javax.swing.JPanel {
             new String [] {
                 "N°", "CODIGO", "PRODUCTO", "CANTIDAD", "PRECIO VENTA", "TOTAL"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(TablaDetalleVenta);
 
         btnRegistrarVenta.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
@@ -276,7 +284,7 @@ public class PanelVenta extends javax.swing.JPanel {
                                         .addComponent(txtCorrelativoVenta, javax.swing.GroupLayout.DEFAULT_SIZE, 236, Short.MAX_VALUE)
                                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(btnProductoVenta)
+                                .addComponent(btnBuscarProducto)
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -328,7 +336,7 @@ public class PanelVenta extends javax.swing.JPanel {
                         .addGap(4, 4, 4)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtNombreProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnProductoVenta)
+                            .addComponent(btnBuscarProducto)
                             .addComponent(txtIdProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -343,13 +351,12 @@ public class PanelVenta extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(48, 48, 48)
                         .addComponent(btnAgregarVenta)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel12)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtTotalVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -393,7 +400,7 @@ public class PanelVenta extends javax.swing.JPanel {
 
     int stockProductoActual; // Variable para almacenar el stock actual del producto
 
-    private void btnProductoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProductoVentaActionPerformed
+    private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
         //Verificar si el campo de nombreProdcuto esta vacío
         if (txtNombreProducto.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Debes ingresar el nombre del producto", "Error", JOptionPane.ERROR_MESSAGE);
@@ -422,7 +429,7 @@ public class PanelVenta extends javax.swing.JPanel {
                 System.out.println("Ocurrio un error durante la obtencion: " + e.getLocalizedMessage());
             }
         }
-    }//GEN-LAST:event_btnProductoVentaActionPerformed
+    }//GEN-LAST:event_btnBuscarProductoActionPerformed
 
     public void validarNombreProductoObtenido() {
         ((AbstractDocument) txtNombreProducto.getDocument()).setDocumentFilter(new DocumentFilter() {
@@ -483,6 +490,7 @@ public class PanelVenta extends javax.swing.JPanel {
     }
 
     private void btnAgregarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarVentaActionPerformed
+
         String cantidadVentaText = this.txtCantidadVenta.getText();
         String nombreProductoText = this.txtNombreProducto.getText();
 
@@ -496,6 +504,12 @@ public class PanelVenta extends javax.swing.JPanel {
         // Verificar si el campo de cantidad está vacío
         if (cantidadVentaText.isEmpty()) {
             JOptionPane.showMessageDialog(null, "Debes ingresar la cantidad de venta", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Detener la ejecución del método
+        }
+
+        // Verificamos si el producto se ha buscado antes de ingresar la cantidad
+        if (txtIdProducto.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Primero debes buscar el producto antes de digitar la cantidad que deseas llevar", "Error", JOptionPane.ERROR_MESSAGE);
             return; // Detener la ejecución del método
         }
 
@@ -563,7 +577,6 @@ public class PanelVenta extends javax.swing.JPanel {
                 return;
             }
         }
-
         // Restar la cantidad vendida al stock actual
         stockProductoActual -= cantidadProducto;
 
@@ -691,8 +704,12 @@ public class PanelVenta extends javax.swing.JPanel {
                     ex.getMessage();
                 }
             } else {
-                // No se ha agregado ningún producto a la tabla
-                if (txtNombreProducto.getText().isEmpty()) {
+                if (!txtNombreProducto.getText().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Primero debes buscar el producto. \n"
+                            + "Luego debes agregar la cantidad de venta. \n"
+                            + "Después, debes agregar el producto a la tabla. \n"
+                            + "Finalmente se registrará la venta", "Error", JOptionPane.ERROR_MESSAGE);
+                } else if (txtNombreProducto.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Debes ingresar el nombre del producto.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (txtCantidadVenta.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Falta ingresar la cantidad de venta", "Error", JOptionPane.ERROR_MESSAGE);
@@ -750,8 +767,8 @@ public class PanelVenta extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTable TablaDetalleVenta;
     public javax.swing.JButton btnAgregarVenta;
+    public javax.swing.JButton btnBuscarProducto;
     public javax.swing.JButton btnEliminarRegistro;
-    public javax.swing.JButton btnProductoVenta;
     public javax.swing.JButton btnRegistrarVenta;
     public javax.swing.JComboBox<String> cboClienteVenta;
     public javax.swing.JComboBox<String> cboMetodoVenta;
