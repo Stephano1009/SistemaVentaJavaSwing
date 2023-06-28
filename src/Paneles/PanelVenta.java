@@ -606,13 +606,10 @@ public class PanelVenta extends javax.swing.JPanel {
                                 break;
                         }
                     }
-
                     // Agrega el objeto DetalleVenta al ArrayList
                     detalleVentas.add(detalleVenta);
                 }
-
                 venta.setDetalles(detalleVentas);
-
                 try {
                     ventaDao.registrar(venta);
                     JOptionPane.showMessageDialog(null, "Venta Registrada con Éxito");
@@ -639,13 +636,14 @@ public class PanelVenta extends javax.swing.JPanel {
                 } catch (Exception ex) {
                     ex.getMessage();
                 }
-
             } else {
                 // No se ha agregado ningún producto a la tabla
                 if (txtNombreProducto.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Debes ingresar el nombre del producto.", "Error", JOptionPane.ERROR_MESSAGE);
                 } else if (txtCantidadVenta.getText().isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Falta ingresar la cantidad de venta", "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Debes ingresar al menos un producto a la tabla.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
