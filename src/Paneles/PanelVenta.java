@@ -484,6 +484,14 @@ public class PanelVenta extends javax.swing.JPanel {
 
     private void btnAgregarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarVentaActionPerformed
         String cantidadVentaText = this.txtCantidadVenta.getText();
+        String nombreProductoText = this.txtNombreProducto.getText();
+
+        // Verificar si el campo de nombre del producto está vacío
+        if (nombreProductoText.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Primero debes ingresar el nombre del producto que deseas llevar", "Error", JOptionPane.ERROR_MESSAGE);
+            txtCantidadVenta.setText("");
+            return; // Detener la ejecución del método
+        }
 
         // Verificar si el campo de cantidad está vacío
         if (cantidadVentaText.isEmpty()) {
@@ -509,6 +517,53 @@ public class PanelVenta extends javax.swing.JPanel {
             return; // Detener la ejecución del método
         }
 
+        // Verificamos si el producto ya existe en la tabla
+        DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
+        int rowCount = modeloDetalleVenta.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            int idProductoTabla = (int) modeloDetalleVenta.getValueAt(i, 1); // Obtener el ID del producto de la fila actual
+            if (idProducto == idProductoTabla) {
+                // Si el producto duplicado existe en la tabla
+                JOptionPane.showMessageDialog(null, "El producto ya existe en la tabla", "Error", JOptionPane.ERROR_MESSAGE);
+
+                // Mostramos cuadro de diálogo de confirmación que nos permita editar la cantidad
+                int opcion = JOptionPane.showConfirmDialog(null, "¿Deseas editar la cantidad a llevar?");
+                if (opcion == JOptionPane.YES_OPTION) {
+                    // Obtenemos la fila correspondiente al producto duplicado
+                    int fila = i;
+
+                    // Obtenemos la cantidad actual del producto duplicado
+                    int cantidadActual = (int) modeloDetalleVenta.getValueAt(fila, 3);
+
+                    // Mostramos una ventana de diálogo para que el usuario ingrese la nueva cantidad
+                    String nuevaCantidadTexto = JOptionPane.showInputDialog(null, "Ingrese la nueva cantidad:", cantidadActual);
+
+                    // Verificamos que el valor ingresado sea un dato válido
+                    if (nuevaCantidadTexto != null && !nuevaCantidadTexto.isEmpty()) {
+                        int nuevaCantidad = Integer.parseInt(nuevaCantidadTexto);
+
+                        // Verificamos si la nueva cantidad es mayor a 0
+                        if (nuevaCantidad > 0) {
+                            // Actualizamos la cantidad en la tabla
+                            modeloDetalleVenta.setValueAt(nuevaCantidad, fila, 3);
+
+                            // Obtenemos el precio del producto ya registrado
+                            double precioProductoExistente = precioProducto;
+                            // Actualizamos el total en la tabla
+                            double nuevoTotal = nuevaCantidad * precioProductoExistente;
+                            modeloDetalleVenta.setValueAt(nuevoTotal, fila, 5);
+
+                            // Seteamos el valor total
+                            this.calcularTotalAPagar();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Debes ingresar una cantidad mayor a 0", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+                return;
+            }
+        }
+
         // Restar la cantidad vendida al stock actual
         stockProductoActual -= cantidadProducto;
 
@@ -525,7 +580,6 @@ public class PanelVenta extends javax.swing.JPanel {
         }
 
         Object[] DatosDeFila = {contador, idProducto, producto, cantidadProducto, precioProducto, totalVenta}; // Incluye el total en el arreglo
-        modeloDetalleVenta = (DefaultTableModel) tabla.getModel();
         modeloDetalleVenta.addRow(DatosDeFila);
 
         // Seteamos el valor total
@@ -679,13 +733,17 @@ public class PanelVenta extends javax.swing.JPanel {
     }//GEN-LAST:event_btnEliminarRegistroActionPerformed
 
     private void calcularTotalAPagar() {
-        double totalAPagar = 0.0; //Variable para almacenar el valor total a pagar
+        DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
+        int rowCount = modeloDetalleVenta.getRowCount();
+        double totalAPagar = 0.0;
 
-        for (int i = 0; i < modeloDetalleVenta.getRowCount(); i++) {
-            double ColumnaTotal = (double) modeloDetalleVenta.getValueAt(i, 5);
-            totalAPagar += ColumnaTotal;
+        for (int i = 0; i < rowCount; i++) {
+            double totalFila = (double) modeloDetalleVenta.getValueAt(i, 5);
+            totalAPagar += totalFila;
         }
-        this.txtTotalVenta.setText(Double.toString(totalAPagar));
+
+        // Actualizar el valor total a pagar en el componente correspondiente
+        txtTotalVenta.setText(String.valueOf(totalAPagar));
     }
 
 
