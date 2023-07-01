@@ -398,8 +398,8 @@ public class PanelVenta extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    // ******************* BOTÓN BUSCAR PRODUCTO **********************
     int stockProductoActual; // Variable para almacenar el stock actual del producto
-
     private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
         //Verificar si el campo de nombreProdcuto esta vacío
         if (txtNombreProducto.getText().isEmpty()) {
@@ -413,7 +413,6 @@ public class PanelVenta extends javax.swing.JPanel {
                 Producto pro = this.ventaDao.obtenerProducto(nombreProducto);
                 if (pro != null) {
                     double precioPro = pro.getPrecioProducto();
-                    //int stockPro = pro.getStockProducto();
                     stockProductoActual = pro.getStockProducto(); // Almacenar el stock actual
                     /*Convertimos el precio del producto a una cadena de texto*/
                     String precioString = String.valueOf(precioPro);
@@ -431,159 +430,67 @@ public class PanelVenta extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnBuscarProductoActionPerformed
 
-    public void validarNombreProductoObtenido() {
-        ((AbstractDocument) txtNombreProducto.getDocument()).setDocumentFilter(new DocumentFilter() {
-            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
-                    throws BadLocationException {
-                StringBuilder sb = new StringBuilder();
-                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
-                sb.insert(offset, text);
-
-                if (sb.toString().matches("[a-zA-Z\\s]{0,30}")) {
-                    super.insertString(fb, offset, text, attr);
-                }
-            }
-
-            @Override
-            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
-                    throws BadLocationException {
-                StringBuilder sb = new StringBuilder();
-                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
-                sb.replace(offset, offset + length, text);
-
-                if (sb.toString().matches("[a-zA-Z\\s]{0,30}")) {
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-        });
-    }
-
-    public void validarCantidadObtenida() {
-        ((AbstractDocument) txtCantidadVenta.getDocument()).setDocumentFilter(new DocumentFilter() {
-            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
-                    throws BadLocationException {
-                StringBuilder sb = new StringBuilder();
-                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
-                sb.insert(offset, text);
-
-                if (sb.toString().matches("-?\\d{0,8}")) {
-                    super.insertString(fb, offset, text, attr);
-                }
-            }
-
-            @Override
-            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
-                    throws BadLocationException {
-                StringBuilder sb = new StringBuilder();
-                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
-                sb.replace(offset, offset + length, text);
-
-                if (sb.toString().matches("-?\\d{0,8}")) {
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-        });
-    }
-
-    private void actualizarContador() {
-        contador++;
-    }
-
+    // ******************* BOTÓN AGREGAR PRODUCTO **********************
     private void btnAgregarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarVentaActionPerformed
+        String[] validarCampos = {txtNombreProducto.getText(), txtCantidadVenta.getText(), txtIdProducto.getText()};
+        String[] mensajesError = {
+            "Completa el campo del producto",
+            "Digita la cantidad de venta",
+            "Primero busca el producto"};
 
-        String cantidadVentaText = this.txtCantidadVenta.getText();
-        String nombreProductoText = this.txtNombreProducto.getText();
-
-        // Verificar si el campo de nombre del producto está vacío
-        if (nombreProductoText.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Primero debes ingresar el nombre del producto que deseas llevar", "Error", JOptionPane.ERROR_MESSAGE);
-            txtCantidadVenta.setText("");
-            return; // Detener la ejecución del método
+        int indexMensaje = 0;
+        for (String campo : validarCampos) {
+            if (EsCampoVacio(campo, mensajesError[indexMensaje])) {
+                return;
+            }
+            indexMensaje++;
         }
 
-        // Verificar si el campo de cantidad está vacío
-        if (cantidadVentaText.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Debes ingresar la cantidad de venta", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // Detener la ejecución del método
-        }
-
-        // Verificamos si el producto se ha buscado antes de ingresar la cantidad
-        if (txtIdProducto.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Primero debes buscar el producto antes de digitar la cantidad que deseas llevar", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // Detener la ejecución del método
-        }
-
-        int idProducto = Integer.parseInt(this.txtIdProducto.getText());
-        String producto = this.txtNombreProducto.getText();
-        int cantidadProducto = Integer.parseInt(this.txtCantidadVenta.getText());
-        double precioProducto = Double.parseDouble(this.txtPrecioVenta.getText());
+        int idProducto = Integer.parseInt(txtIdProducto.getText());
+        String producto = txtNombreProducto.getText();
+        int cantidadProducto = Integer.parseInt(txtCantidadVenta.getText());
+        double precioProducto = Double.parseDouble(txtPrecioVenta.getText());
         double totalVenta = cantidadProducto * precioProducto;
 
-        // Verificar si la cantidad ingresada es menor o igual a 0
-        if (cantidadProducto <= 0) {
-            JOptionPane.showMessageDialog(null, "Debes ingresar una cantidad mayor a 0", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // Detener la ejecución del método
+        if (cantidadProducto <= 0 || cantidadProducto > stockProductoActual) {
+            String MensajeError = cantidadProducto <= 0 ? "Cantidad Inválida" : "Stock Insuficiente";
+            errorDialogo(MensajeError);
+            return;
         }
 
-        // Verificar si la cantidad a vender supera el stock actual
-        if (cantidadProducto > stockProductoActual) {
-            JOptionPane.showMessageDialog(null, "No cuentas con el stock suficiente", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // Detener la ejecución del método
-        }
-
-        // Verificamos si el producto ya existe en la tabla
         DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
-        int rowCount = modeloDetalleVenta.getRowCount();
-        for (int i = 0; i < rowCount; i++) {
-            int idProductoTabla = (int) modeloDetalleVenta.getValueAt(i, 1); // Obtener el ID del producto de la fila actual
+        int numeroFilas = modeloDetalleVenta.getRowCount();
+
+        for (int i = 0; i < numeroFilas; i++) {
+            int idProductoTabla = (int) modeloDetalleVenta.getValueAt(i, 1);
             if (idProducto == idProductoTabla) {
-                // Si el producto duplicado existe en la tabla
-                JOptionPane.showMessageDialog(null, "El producto ya existe en la tabla", "Error", JOptionPane.ERROR_MESSAGE);
-
-                // Mostramos cuadro de diálogo de confirmación que nos permita editar la cantidad
-                int opcion = JOptionPane.showConfirmDialog(null, "¿Deseas editar la cantidad a llevar?");
+                errorDialogo("El producto ya existe en la tabla");
+                int opcion = confirmacionDialogo("¿Deseas editar la cantidad a llevar?");
                 if (opcion == JOptionPane.YES_OPTION) {
-                    // Obtenemos la fila correspondiente al producto duplicado
                     int fila = i;
-
-                    // Obtenemos la cantidad actual del producto duplicado
                     int cantidadActual = (int) modeloDetalleVenta.getValueAt(fila, 3);
-
-                    // Mostramos una ventana de diálogo para que el usuario ingrese la nueva cantidad
-                    String nuevaCantidadTexto = JOptionPane.showInputDialog(null, "Ingrese la nueva cantidad:", cantidadActual);
-
-                    // Verificamos que el valor ingresado sea un dato válido
-                    if (nuevaCantidadTexto != null && !nuevaCantidadTexto.isEmpty()) {
-                        int nuevaCantidad = Integer.parseInt(nuevaCantidadTexto);
-
-                        // Verificamos si la nueva cantidad es mayor a 0
-                        if (nuevaCantidad > 0) {
-                            // Actualizamos la cantidad en la tabla
+                    String nuevaCantidadIngresada = cuadroDialogo("Nueva Cantidad:", cantidadActual);
+                    if (esEntradaValida(nuevaCantidadIngresada)) {
+                        int nuevaCantidad = Integer.parseInt(nuevaCantidadIngresada);
+                        if (nuevaCantidad > 0 && nuevaCantidad <= stockProductoActual) {
                             modeloDetalleVenta.setValueAt(nuevaCantidad, fila, 3);
-
-                            // Obtenemos el precio del producto ya registrado
-                            double precioProductoExistente = precioProducto;
-                            // Actualizamos el total en la tabla
-                            double nuevoTotal = nuevaCantidad * precioProductoExistente;
+                            double nuevoTotal = nuevaCantidad * precioProducto;
                             modeloDetalleVenta.setValueAt(nuevoTotal, fila, 5);
-
-                            // Seteamos el valor total
-                            this.calcularTotalAPagar();
+                            stockProductoActual -= (nuevaCantidad - cantidadActual);
+                            actualizarContador();
+                            calcularTotalAPagar();
                         } else {
-                            JOptionPane.showMessageDialog(null, "Debes ingresar una cantidad mayor a 0", "Error", JOptionPane.ERROR_MESSAGE);
+                            errorDialogo("Cantidad Inválida");
                         }
                     }
                 }
                 return;
             }
         }
-        // Restar la cantidad vendida al stock actual
-        stockProductoActual -= cantidadProducto;
 
-        // Actualizar el contador
+        stockProductoActual -= cantidadProducto;
         actualizarContador();
 
-        // Creamos un objeto DefaultTableCellRenderer para centrar el contenido
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         JTable tabla = TablaDetalleVenta;
@@ -592,162 +499,181 @@ public class PanelVenta extends javax.swing.JPanel {
             tabla.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 
-        Object[] DatosDeFila = {contador, idProducto, producto, cantidadProducto, precioProducto, totalVenta}; // Incluye el total en el arreglo
+        Object[] DatosDeFila = {contador, idProducto, producto, cantidadProducto, precioProducto, totalVenta};
         modeloDetalleVenta.addRow(DatosDeFila);
 
-        // Seteamos el valor total
-        this.calcularTotalAPagar();
+        calcularTotalAPagar();
+        limpiarCampos();
+    }//GEN-LAST:event_btnAgregarVentaActionPerformed
 
-        // Limpiar los campos de texto
+    // ******************* BOTÓN REGISTRAR **********************
+    private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
+        List<String> mensajesError = validarCampos();
+        if (!mensajesError.isEmpty()) {
+            String mensaje = mensajesError.size() == 1 ? mensajesError.get(0) : "Debe seleccionar y completar los campos requeridos.";
+            JOptionPane.showMessageDialog(null, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (TablaDetalleVenta.getRowCount() > 0) {
+                // Guardar datos de la venta
+                Venta venta = crearVenta();
+
+                // Guardar detalles de la venta
+                ArrayList<DetalleVenta> detalleVentas = obtenerDetallesVenta();
+                venta.setDetalles(detalleVentas);
+                try {
+                    ventaDao.registrar(venta);
+                    JOptionPane.showMessageDialog(null, "Venta Registrada con Éxito");
+                    reiniciarCamposYTabla();
+                } catch (Exception ex) {
+                    ex.getMessage();
+                }
+            } else {
+                mostrarMensajeErrorTabla();
+            }
+        }
+    }//GEN-LAST:event_btnRegistrarVentaActionPerformed
+
+    // ******************* BOTÓN ELIMINAR **********************
+    private void btnEliminarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarRegistroActionPerformed
+        DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
+        int filaSeleccionada = TablaDetalleVenta.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            // No se ha seleccionado ninguna fila
+            JOptionPane.showMessageDialog(null, "Debes seleccionar un producto para eliminarlo", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            // Se ha seleccionado una fila
+            int opcion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres eliminar este producto?");
+
+            if (opcion == JOptionPane.YES_OPTION) {
+                int cantidadProducto = (int) modeloDetalleVenta.getValueAt(filaSeleccionada, 3);
+                int idProducto = (int) modeloDetalleVenta.getValueAt(filaSeleccionada, 1);
+
+                // Restaurar la cantidad eliminada al stock actual
+                stockProductoActual += cantidadProducto;
+
+                // Eliminar la fila seleccionada de la tabla
+                modeloDetalleVenta.removeRow(filaSeleccionada);
+
+                // Actualizar el contador
+                actualizarContador();
+
+                // Mostrar mensaje de éxito
+                JOptionPane.showMessageDialog(null, "Producto eliminado correctamente", "Eliminado", JOptionPane.INFORMATION_MESSAGE);
+
+                // Setear el valor total
+                calcularTotalAPagar();
+            }
+        }
+    }//GEN-LAST:event_btnEliminarRegistroActionPerformed
+    
+    
+    //Actualizar contador
+    private void actualizarContador() {
+        DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
+        int rowCount = modeloDetalleVenta.getRowCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            modeloDetalleVenta.setValueAt(i + 1, i, 0);
+        }
+        contador = rowCount > 0 ? rowCount + 1 : 1;
+    }
+    
+    //Validar nombre y cantidad
+    public void validarNombreProductoObtenido() {
+        AbstractDocument document = (AbstractDocument) txtNombreProducto.getDocument();
+        document.setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (esNombreProductoValido(sb.toString())) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (esNombreProductoValido(sb.toString())) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+
+            private boolean esNombreProductoValido(String nombreProducto) {
+                return nombreProducto.matches("[a-zA-Z\\s]{0,30}");
+            }
+        });
+    }
+    
+    public void validarCantidadObtenida() {
+        AbstractDocument document = (AbstractDocument) txtCantidadVenta.getDocument();
+        document.setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (esCantidadValida(sb.toString())) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (esCantidadValida(sb.toString())) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+
+            private boolean esCantidadValida(String cantidad) {
+                return cantidad.matches("-?\\d{0,8}");
+            }
+        });
+    }
+    
+    // ******************* MÉTODOS BOTÓN AGREGAR **********************
+    private void errorDialogo(String mensajeError) {
+        JOptionPane.showMessageDialog(null, mensajeError, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private int confirmacionDialogo(String mensajeConfirmacion) {
+        return JOptionPane.showConfirmDialog(null, mensajeConfirmacion);
+    }
+
+    private String cuadroDialogo(String mensajeDialogo, int ValorDefecto) {
+        return JOptionPane.showInputDialog(null, mensajeDialogo, ValorDefecto);
+    }
+
+    private boolean esEntradaValida(String entrada) {
+        return entrada != null && !entrada.isEmpty();
+    }
+
+    private boolean EsCampoVacio(String ValorCampo, String MensajeError) {
+        if (ValorCampo.isEmpty()) {
+            errorDialogo(MensajeError);
+            return true;
+        }
+        return false;
+    }
+
+    public void limpiarCampos() {
         txtNombreProducto.setText("");
         txtIdProducto.setText("");
         txtStockProducto.setText("");
         txtPrecioVenta.setText("");
         txtCantidadVenta.setText("");
-    }//GEN-LAST:event_btnAgregarVentaActionPerformed
-
-    public String firstNChars(String str, int n) {
-        if (str == null) {
-            return null;
-        }
-        return str.length() < n ? str : str.substring(0, n);
     }
-
-    private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
-        List<String> mensajesError = validarCampos();
-        if (!mensajesError.isEmpty()) {
-            String mensaje;
-            if (mensajesError.size() == 1) {
-                mensaje = mensajesError.get(0);
-            } else {
-                mensaje = "Debe seleccionar y completar los campos requeridos.";
-            }
-            JOptionPane.showMessageDialog(null, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            if (TablaDetalleVenta.getRowCount() > 0) {
-                // Guardar datos de la venta
-                Venta venta = new Venta();
-                venta.setIdEmpleado(1);
-                Object valorCliente = cboClienteVenta.getSelectedItem();
-                String idCliente = firstNChars(String.valueOf(valorCliente), 1);
-                venta.setIdCliente(Integer.parseInt(idCliente));
-                Object valorPago = cboMetodoVenta.getSelectedItem();
-                String idPago = firstNChars(String.valueOf(valorPago), 1);
-                venta.setIdMetodoPago(Integer.parseInt(idPago));
-                venta.setSerie(txtSerieVenta.getText());
-                venta.setNumeroCorrelativo(txtCorrelativoVenta.getText());
-                venta.setTipoComprobante("B");
-                venta.setEstadoVenta(true);
-                venta.setFechaVenta(new Date());
-                venta.setTotal(Double.parseDouble(txtTotalVenta.getText()));
-
-                // Guardar detalles de la venta
-                JTable table = TablaDetalleVenta;
-                ArrayList<DetalleVenta> detalleVentas = new ArrayList<>();
-
-                // Recorre cada fila del JTable
-                for (int i = 0; i < table.getRowCount(); i++) {
-                    DetalleVenta detalleVenta = new DetalleVenta();
-
-                    // Recorre cada columna del JTable
-                    for (int j = 0; j < table.getColumnCount(); j++) {
-                        // Obtiene el valor de la celda en la fila "i" y columna "j"
-                        Object value = table.getValueAt(i, j);
-
-                        // Establece los valores correspondientes en el objeto DetalleVenta
-                        switch (j) {
-                            case 0: // Columna N°
-                                // No hacer nada
-                                break;
-                            case 1: // Columna CODIGO
-                                detalleVenta.setIdProducto((int) value);
-                                break;
-                            case 2: // Columna PRODUCTO
-                                // No hacer nada
-                                break;
-                            case 3: // Columna CANTIDAD
-                                detalleVenta.setCantidad((int) value);
-                                break;
-                            case 4: // Columna PRECIOVENTA
-                                detalleVenta.setPrecioVenta((double) value);
-                                break;
-                        }
-                    }
-                    // Agrega el objeto DetalleVenta al ArrayList
-                    detalleVentas.add(detalleVenta);
-                }
-                venta.setDetalles(detalleVentas);
-                try {
-                    ventaDao.registrar(venta);
-                    JOptionPane.showMessageDialog(null, "Venta Registrada con Éxito");
-                    //Actualizar el contador
-                    contador = 0; // Reiniciar el contador a 0
-
-                    // Actualizar el correlativo
-                    cargarCorrelativoSerie();
-
-                    // Limpiar los campos de texto
-                    txtStockProducto.setText("");
-                    txtNombreProducto.setText("");
-                    txtCantidadVenta.setText("");
-                    txtPrecioVenta.setText("");
-                    txtTotalVenta.setText("");
-
-                    // Restablecer el ComboBox
-                    cboClienteVenta.setSelectedIndex(0);
-                    cboMetodoVenta.setSelectedIndex(0);
-
-                    // Limpiar la tabla
-                    DefaultTableModel model = (DefaultTableModel) TablaDetalleVenta.getModel();
-                    model.setRowCount(0);
-                } catch (Exception ex) {
-                    ex.getMessage();
-                }
-            } else {
-                if (!txtNombreProducto.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Primero debes buscar el producto. \n"
-                            + "Luego debes agregar la cantidad de venta. \n"
-                            + "Después, debes agregar el producto a la tabla. \n"
-                            + "Finalmente se registrará la venta", "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (txtNombreProducto.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Debes ingresar el nombre del producto.", "Error", JOptionPane.ERROR_MESSAGE);
-                } else if (txtCantidadVenta.getText().isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Falta ingresar la cantidad de venta", "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(null, "Debes ingresar al menos un producto a la tabla.", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-    }//GEN-LAST:event_btnRegistrarVentaActionPerformed
-
-    public List<String> validarCampos() {
-        List<String> mensajesError = new ArrayList<>();
-
-        if (cboClienteVenta.getSelectedIndex() == 0) {
-            mensajesError.add("Falta seleccionar el cliente.");
-        }
-        if (cboMetodoVenta.getSelectedIndex() == 0) {
-            mensajesError.add("Falta seleccionar el método de venta.");
-        }
-        return mensajesError;
-    }
-
-    private void btnEliminarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarRegistroActionPerformed
-        int filaSeleccionada = TablaDetalleVenta.getSelectedRow();
-        if (filaSeleccionada >= 0) {
-            modeloDetalleVenta.removeRow(filaSeleccionada);
-            calcularTotalAPagar();
-
-            // Actualizar el contador
-            contador = modeloDetalleVenta.getRowCount(); // Actualizar el contador con la cantidad de filas en el modelo
-
-            if (modeloDetalleVenta.getRowCount() == 0) {
-                this.txtTotalVenta.setText("");
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Debe seleccionar un registro de la tabla", "Advertencia", JOptionPane.WARNING_MESSAGE);
-        }
-    }//GEN-LAST:event_btnEliminarRegistroActionPerformed
 
     private void calcularTotalAPagar() {
         DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
@@ -762,7 +688,122 @@ public class PanelVenta extends javax.swing.JPanel {
         // Actualizar el valor total a pagar en el componente correspondiente
         txtTotalVenta.setText(String.valueOf(totalAPagar));
     }
+    
+    // ******************* MÉTODOS BOTÓN REGISTRAR **********************
+    public String primerCaracter(String str, int n) {
+        /*Si en caso la cadena es nula, evitamos el nullPointerException*/
+        if (str == null) {
+            return null;
+        }
+        return str.length() < n ? str : str.substring(0, n);
+    }
 
+    public Venta crearVenta() {
+        Venta venta = new Venta();
+        venta.setIdEmpleado(1);
+
+        Object valorCliente = cboClienteVenta.getSelectedItem();
+        String idCliente = primerCaracter(String.valueOf(valorCliente), 1);
+        venta.setIdCliente(Integer.parseInt(idCliente));
+
+        Object valorPago = cboMetodoVenta.getSelectedItem();
+        String idPago = primerCaracter(String.valueOf(valorPago), 1);
+        venta.setIdMetodoPago(Integer.parseInt(idPago));
+
+        venta.setSerie(txtSerieVenta.getText());
+        venta.setNumeroCorrelativo(txtCorrelativoVenta.getText());
+        venta.setTipoComprobante("B");
+        venta.setEstadoVenta(true);
+        venta.setFechaVenta(new Date());
+        venta.setTotal(Double.parseDouble(txtTotalVenta.getText()));
+
+        return venta;
+    }
+
+    public ArrayList<DetalleVenta> obtenerDetallesVenta() {
+        JTable table = TablaDetalleVenta;
+        ArrayList<DetalleVenta> detalleVentas = new ArrayList<>();
+
+        for (int i = 0; i < table.getRowCount(); i++) {
+            DetalleVenta detalleVenta = new DetalleVenta();
+
+            for (int j = 0; j < table.getColumnCount(); j++) {
+                Object value = table.getValueAt(i, j);
+
+                switch (j) {
+                    case 0: // Columna N°
+                        break;
+                    case 1: // Columna CODIGO
+                        detalleVenta.setIdProducto((int) value);
+                        break;
+                    case 2: // Columna PRODUCTO
+                        break;
+                    case 3: // Columna CANTIDAD
+                        detalleVenta.setCantidad((int) value);
+                        break;
+                    case 4: // Columna PRECIOVENTA
+                        detalleVenta.setPrecioVenta((double) value);
+                        break;
+                }
+            }
+
+            detalleVentas.add(detalleVenta);
+        }
+
+        return detalleVentas;
+    }
+
+    public void reiniciarCamposYTabla() {
+        // Actualizar el contador
+        contador = 0;
+
+        // Actualizar el correlativo
+        cargarCorrelativoSerie();
+
+        // Limpiar los campos de texto
+        txtStockProducto.setText("");
+        txtNombreProducto.setText("");
+        txtCantidadVenta.setText("");
+        txtPrecioVenta.setText("");
+        txtTotalVenta.setText("");
+
+        // Restablecer el ComboBox
+        cboClienteVenta.setSelectedIndex(0);
+        cboMetodoVenta.setSelectedIndex(0);
+
+        // Limpiar la tabla
+        DefaultTableModel model = (DefaultTableModel) TablaDetalleVenta.getModel();
+        model.setRowCount(0);
+    }
+
+    public void mostrarMensajeErrorTabla() {
+        if (!txtNombreProducto.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Primero debes buscar el producto. \n"
+                    + "Luego debes agregar la cantidad de venta. \n"
+                    + "Después, debes agregar el producto a la tabla. \n"
+                    + "Finalmente se registrará la venta", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (txtNombreProducto.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Debes ingresar el nombre del producto.", "Error", JOptionPane.ERROR_MESSAGE);
+        } else if (txtCantidadVenta.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Falta ingresar la cantidad de venta", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Debes ingresar al menos un producto a la tabla.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public List<String> validarCampos() {
+        List<String> mensajesError = new ArrayList<>();
+
+        if (cboClienteVenta.getSelectedIndex() == 0) {
+            mensajesError.add("Falta seleccionar el cliente.");
+        }
+        if (cboMetodoVenta.getSelectedIndex() == 0) {
+            mensajesError.add("Falta seleccionar el método de venta.");
+        }
+        return mensajesError;
+    }
+
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTable TablaDetalleVenta;
