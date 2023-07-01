@@ -506,142 +506,7 @@ public class PanelVenta extends javax.swing.JPanel {
         limpiarCampos();
     }//GEN-LAST:event_btnAgregarVentaActionPerformed
 
-    // ******************* BOTÓN REGISTRAR **********************
-    private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
-        List<String> mensajesError = validarCampos();
-        if (!mensajesError.isEmpty()) {
-            String mensaje = mensajesError.size() == 1 ? mensajesError.get(0) : "Debe seleccionar y completar los campos requeridos.";
-            JOptionPane.showMessageDialog(null, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            if (TablaDetalleVenta.getRowCount() > 0) {
-                // Guardar datos de la venta
-                Venta venta = crearVenta();
-
-                // Guardar detalles de la venta
-                ArrayList<DetalleVenta> detalleVentas = obtenerDetallesVenta();
-                venta.setDetalles(detalleVentas);
-                try {
-                    ventaDao.registrar(venta);
-                    JOptionPane.showMessageDialog(null, "Venta Registrada con Éxito");
-                    reiniciarCamposYTabla();
-                } catch (Exception ex) {
-                    ex.getMessage();
-                }
-            } else {
-                mostrarMensajeErrorTabla();
-            }
-        }
-    }//GEN-LAST:event_btnRegistrarVentaActionPerformed
-
-    // ******************* BOTÓN ELIMINAR **********************
-    private void btnEliminarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarRegistroActionPerformed
-        DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
-        int filaSeleccionada = TablaDetalleVenta.getSelectedRow();
-
-        if (filaSeleccionada == -1) {
-            // No se ha seleccionado ninguna fila
-            JOptionPane.showMessageDialog(null, "Debes seleccionar un producto para eliminarlo", "Error", JOptionPane.ERROR_MESSAGE);
-        } else {
-            // Se ha seleccionado una fila
-            int opcion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres eliminar este producto?");
-
-            if (opcion == JOptionPane.YES_OPTION) {
-                int cantidadProducto = (int) modeloDetalleVenta.getValueAt(filaSeleccionada, 3);
-                int idProducto = (int) modeloDetalleVenta.getValueAt(filaSeleccionada, 1);
-
-                // Restaurar la cantidad eliminada al stock actual
-                stockProductoActual += cantidadProducto;
-
-                // Eliminar la fila seleccionada de la tabla
-                modeloDetalleVenta.removeRow(filaSeleccionada);
-
-                // Actualizar el contador
-                actualizarContador();
-
-                // Mostrar mensaje de éxito
-                JOptionPane.showMessageDialog(null, "Producto eliminado correctamente", "Eliminado", JOptionPane.INFORMATION_MESSAGE);
-
-                // Setear el valor total
-                calcularTotalAPagar();
-            }
-        }
-    }//GEN-LAST:event_btnEliminarRegistroActionPerformed
-    
-    
-    //Actualizar contador
-    private void actualizarContador() {
-        DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
-        int rowCount = modeloDetalleVenta.getRowCount();
-
-        for (int i = 0; i < rowCount; i++) {
-            modeloDetalleVenta.setValueAt(i + 1, i, 0);
-        }
-        contador = rowCount > 0 ? rowCount + 1 : 1;
-    }
-    
-    //Validar nombre y cantidad
-    public void validarNombreProductoObtenido() {
-        AbstractDocument document = (AbstractDocument) txtNombreProducto.getDocument();
-        document.setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr)
-                    throws BadLocationException {
-                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
-                sb.insert(offset, text);
-
-                if (esNombreProductoValido(sb.toString())) {
-                    super.insertString(fb, offset, text, attr);
-                }
-            }
-
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
-                    throws BadLocationException {
-                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
-                sb.replace(offset, offset + length, text);
-
-                if (esNombreProductoValido(sb.toString())) {
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-
-            private boolean esNombreProductoValido(String nombreProducto) {
-                return nombreProducto.matches("[a-zA-Z\\s]{0,30}");
-            }
-        });
-    }
-    
-    public void validarCantidadObtenida() {
-        AbstractDocument document = (AbstractDocument) txtCantidadVenta.getDocument();
-        document.setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr)
-                    throws BadLocationException {
-                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
-                sb.insert(offset, text);
-
-                if (esCantidadValida(sb.toString())) {
-                    super.insertString(fb, offset, text, attr);
-                }
-            }
-
-            @Override
-            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
-                    throws BadLocationException {
-                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
-                sb.replace(offset, offset + length, text);
-
-                if (esCantidadValida(sb.toString())) {
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-
-            private boolean esCantidadValida(String cantidad) {
-                return cantidad.matches("-?\\d{0,8}");
-            }
-        });
-    }
-    
+        
     // ******************* MÉTODOS BOTÓN AGREGAR **********************
     private void errorDialogo(String mensajeError) {
         JOptionPane.showMessageDialog(null, mensajeError, "Error", JOptionPane.ERROR_MESSAGE);
@@ -689,7 +554,45 @@ public class PanelVenta extends javax.swing.JPanel {
         txtTotalVenta.setText(String.valueOf(totalAPagar));
     }
     
-    // ******************* MÉTODOS BOTÓN REGISTRAR **********************
+    //Actualizar contador
+    private void actualizarContador() {
+        DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
+        int rowCount = modeloDetalleVenta.getRowCount();
+
+        for (int i = 0; i < rowCount; i++) {
+            modeloDetalleVenta.setValueAt(i + 1, i, 0);
+        }
+        contador = rowCount > 0 ? rowCount + 1 : 1;
+    }
+    
+    // ******************* BOTÓN REGISTRAR **********************
+    private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
+        List<String> mensajesError = validarCampos();
+        if (!mensajesError.isEmpty()) {
+            String mensaje = mensajesError.size() == 1 ? mensajesError.get(0) : "Debe seleccionar y completar los campos requeridos.";
+            JOptionPane.showMessageDialog(null, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            if (TablaDetalleVenta.getRowCount() > 0) {
+                // Guardar datos de la venta
+                Venta venta = crearVenta();
+
+                // Guardar detalles de la venta
+                ArrayList<DetalleVenta> detalleVentas = obtenerDetallesVenta();
+                venta.setDetalles(detalleVentas);
+                try {
+                    ventaDao.registrar(venta);
+                    JOptionPane.showMessageDialog(null, "Venta Registrada con Éxito");
+                    reiniciarCamposYTabla();
+                } catch (Exception ex) {
+                    ex.getMessage();
+                }
+            } else {
+                mostrarMensajeErrorTabla();
+            }
+        }
+    }//GEN-LAST:event_btnRegistrarVentaActionPerformed
+
+        // ******************* MÉTODOS BOTÓN REGISTRAR **********************
     public String primerCaracter(String str, int n) {
         /*Si en caso la cadena es nula, evitamos el nullPointerException*/
         if (str == null) {
@@ -802,8 +705,103 @@ public class PanelVenta extends javax.swing.JPanel {
         }
         return mensajesError;
     }
-
     
+    // ******************* BOTÓN ELIMINAR **********************
+    private void btnEliminarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarRegistroActionPerformed
+        DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
+        int filaSeleccionada = TablaDetalleVenta.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            // No se ha seleccionado ninguna fila
+            JOptionPane.showMessageDialog(null, "Debes seleccionar un producto para eliminarlo", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            // Se ha seleccionado una fila
+            int opcion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres eliminar este producto?");
+
+            if (opcion == JOptionPane.YES_OPTION) {
+                int cantidadProducto = (int) modeloDetalleVenta.getValueAt(filaSeleccionada, 3);
+                int idProducto = (int) modeloDetalleVenta.getValueAt(filaSeleccionada, 1);
+
+                // Restaurar la cantidad eliminada al stock actual
+                stockProductoActual += cantidadProducto;
+
+                // Eliminar la fila seleccionada de la tabla
+                modeloDetalleVenta.removeRow(filaSeleccionada);
+
+                // Actualizar el contador
+                actualizarContador();
+
+                // Mostrar mensaje de éxito
+                JOptionPane.showMessageDialog(null, "Producto eliminado correctamente", "Eliminado", JOptionPane.INFORMATION_MESSAGE);
+
+                // Setear el valor total
+                calcularTotalAPagar();
+            }
+        }
+    }//GEN-LAST:event_btnEliminarRegistroActionPerformed
+
+    //Validar nombre y cantidad
+    public void validarNombreProductoObtenido() {
+        AbstractDocument document = (AbstractDocument) txtNombreProducto.getDocument();
+        document.setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (esNombreProductoValido(sb.toString())) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (esNombreProductoValido(sb.toString())) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+
+            private boolean esNombreProductoValido(String nombreProducto) {
+                return nombreProducto.matches("[a-zA-Z\\s]{0,30}");
+            }
+        });
+    }
+    
+    public void validarCantidadObtenida() {
+        AbstractDocument document = (AbstractDocument) txtCantidadVenta.getDocument();
+        document.setDocumentFilter(new DocumentFilter() {
+            @Override
+            public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (esCantidadValida(sb.toString())) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (esCantidadValida(sb.toString())) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+
+            private boolean esCantidadValida(String cantidad) {
+                return cantidad.matches("-?\\d{0,8}");
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTable TablaDetalleVenta;
