@@ -8,6 +8,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import Consultas.UsuarioDao;
 import Clases.Usuario;
+import java.awt.Window;
+import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
 
 public class PanelUsuario extends javax.swing.JPanel {
 
@@ -171,6 +174,11 @@ public class PanelUsuario extends javax.swing.JPanel {
                 new Object[]{},
                 null
         );
+        Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof JDialog) {
+            JDialog dialog = (JDialog) window;
+            dialog.dispose();
+        }
     }//GEN-LAST:event_btnNuevoUsuarioActionPerformed
 
     private void btnListarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarUsuarioActionPerformed

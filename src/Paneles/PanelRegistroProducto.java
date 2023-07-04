@@ -1,48 +1,52 @@
 package Paneles;
 
 import Clases.Categoria;
+import Clases.Producto;
 import Clases.Proveedor;
 import Consultas.CategoriaDao;
+import Consultas.ProductoDao;
 import Consultas.ProveedorDao;
 import java.util.List;
 import javax.swing.JComboBox;
-
+import javax.swing.JOptionPane;
 
 public class PanelRegistroProducto extends javax.swing.JPanel {
 
     CategoriaDao catDao = new CategoriaDao();
     ProveedorDao provDao = new ProveedorDao();
-    
+    Producto p = new Producto();
+    ProductoDao daoProducto = new ProductoDao();
+
     public PanelRegistroProducto() {
         initComponents();
         CargarCategorias();
         CargarProveedor();
     }
-    
-    public void CargarCategorias(){
+
+    public void CargarCategorias() {
         List<Categoria> listaCategorias = catDao.listarCategoria();
-        for (Categoria cargoCat : listaCategorias){
+        for (Categoria cargoCat : listaCategorias) {
             cboCategoriaProducto.addItem(cargoCat.getNombreCategoria());
         }
     }
-    
-    public void CargarProveedor(){
+
+    public void CargarProveedor() {
         List<Proveedor> listaProveedores = provDao.listarProveedor();
-        for (Proveedor cargoProv : listaProveedores){
+        for (Proveedor cargoProv : listaProveedores) {
             cboProveedorProducto.addItem(cargoProv.getNombreProveedor());
         }
     }
-    
+
     public JComboBox getCboCategoriaProducto() {
         return cboCategoriaProducto;
     }
-    
+
     private PanelProducto panelProducto;
-    
+
     public void setPanelProducto(PanelProducto panelProducto) {
         this.panelProducto = panelProducto;
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -71,7 +75,7 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "DATOS DEL PRODUCTO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "DATOS DEL PRODUCTO", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jLabel1.setText("Nombre Del Producto");
@@ -119,10 +123,20 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
         btnGuardarProducto.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnGuardarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/guardar.png"))); // NOI18N
         btnGuardarProducto.setText("GUARDAR PRODUCTO");
+        btnGuardarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarProductoActionPerformed(evt);
+            }
+        });
 
         btnActualizarProducto.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnActualizarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/actualizar.png"))); // NOI18N
         btnActualizarProducto.setText("ACTUALIZAR PRODUCTO");
+        btnActualizarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarProductoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -227,6 +241,126 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnActualizarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarProductoActionPerformed
+        actualizarProducto();
+    }//GEN-LAST:event_btnActualizarProductoActionPerformed
+
+    private void btnGuardarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarProductoActionPerformed
+        if (validarDatos() == false) {
+            JOptionPane.showMessageDialog(null, "Falta ingresar datos");
+            return;
+        } else {
+            agregarProducto();
+        }
+    }//GEN-LAST:event_btnGuardarProductoActionPerformed
+
+    private boolean validarDatos() {
+        if (txtNombreProducto.getText().isEmpty()) {
+            return false;
+        }
+        if (txtDescripcionProducto.getText().isEmpty()) {
+            return false;
+        }
+        if (txtContenidoProducto.getText().isEmpty()) {
+            return false;
+        }
+        if (txtPrecioProducto.getText().isEmpty()) {
+            return false;
+        }
+        if (txtStockProducto.getText().isEmpty()) {
+            return false;
+        }
+        if (cboCategoriaProducto.getSelectedIndex() == 0) {
+            return false;
+        }
+        if (cboProveedorProducto.getSelectedIndex() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public void agregarProducto() {
+        String nomPro = txtNombreProducto.getText();
+        String desPro = txtDescripcionProducto.getText();
+        String contPro = txtContenidoProducto.getText();
+        String prePro = txtPrecioProducto.getText();
+        String stoPro = txtStockProducto.getText();
+        Object nombreCategoria = cboCategoriaProducto.getSelectedItem();
+        Object nombreProveedor = cboProveedorProducto.getSelectedItem();
+        boolean esPro = chkActivoProducto.isSelected();
+
+        int idCategoria = this.catDao.obtenerIdCategoriaPorNombreCategoria(nombreCategoria.toString());
+        int idProveedor = this.provDao.obtenerIdProveedorPorNombreProveedor(nombreProveedor.toString());
+
+        p.setNombreProducto(nomPro);
+        p.setDescripcionProducto(desPro);
+        p.setContenidoProducto(contPro);
+        p.setPrecioProducto(Double.parseDouble(prePro));
+        p.setStockProducto(Integer.parseInt(stoPro));
+        p.setIdCategoria(idCategoria);
+        p.setIdProveedor(idProveedor);
+        p.setEstadoProducto(esPro);
+
+        int respuesta = daoProducto.agregarPro(p);
+        if (respuesta == 1) {
+            JOptionPane.showMessageDialog(null, "Producto agregado con éxito");
+        } else {
+            JOptionPane.showMessageDialog(null, "Error");
+        }
+    }
+
+    public void actualizarProducto() {
+        String nombreProducto = txtNombreProducto.getText();
+        String descripcionProducto = txtDescripcionProducto.getText();
+        String contenidoProducto = txtContenidoProducto.getText();
+        String precioProducto = txtPrecioProducto.getText();
+        String stockProducto = txtStockProducto.getText();
+        Object valorCategoria = cboCategoriaProducto.getSelectedItem();
+        Object valorProveedor = cboProveedorProducto.getSelectedItem();
+
+        if (valorCategoria.toString().equals("Seleccione una categoría")) {
+            JOptionPane.showMessageDialog(null, "Error, debe seleccionar una categoría");
+        } else if (valorProveedor.toString().equals("Seleccione un proveedor")) {
+            JOptionPane.showMessageDialog(null, "Error, debe seleccionar un proveedor");
+        } else {
+            int idCategoria = catDao.obtenerIdCategoriaPorNombreCategoria(valorCategoria.toString());
+            int idProveedor = provDao.obtenerIdProveedorPorNombreProveedor(valorProveedor.toString());
+            boolean estadoProducto = chkActivoProducto.isSelected();
+
+            p.setNombreProducto(nombreProducto);
+            p.setDescripcionProducto(descripcionProducto);
+            p.setContenidoProducto(contenidoProducto);
+            p.setPrecioProducto(Double.parseDouble(precioProducto));
+            p.setStockProducto(Integer.parseInt(stockProducto));
+            p.setIdCategoria(idCategoria);
+            p.setIdProveedor(idProveedor);
+            p.setEstadoProducto(estadoProducto);
+
+            int r = daoProducto.actualizarProducto(p);
+            if (r == 1) {
+                JOptionPane.showMessageDialog(null, "Producto actualizado con éxito");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al actualizar producto: ");              
+            }
+            btnGuardarProducto.setEnabled(false);
+        }
+    }
+
+    public void setDatosEditar(Producto p) {
+        txtNombreProducto.setText(p.getNombreProducto());
+        txtDescripcionProducto.setText(p.getDescripcionProducto());
+        txtContenidoProducto.setText(p.getContenidoProducto());
+        txtPrecioProducto.setText(String.valueOf(p.getPrecioProducto()));
+        txtStockProducto.setText(String.valueOf(p.getStockProducto()));
+        int idCategoria = p.getIdCategoria();
+        String nombreCategoria = daoProducto.obtenerNombreCategoriaPorId(idCategoria);
+        cboCategoriaProducto.setSelectedItem(nombreCategoria);
+        int idProveedor = p.getIdProveedor();
+        String nombreProveedor = daoProducto.obtenerNombreProveedorPorId(idProveedor);
+        cboProveedorProducto.setSelectedItem(nombreProveedor);
+        chkActivoProducto.setSelected(p.isEstadoProducto());
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

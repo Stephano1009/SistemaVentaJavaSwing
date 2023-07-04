@@ -3,6 +3,8 @@ package Paneles;
 import Clases.Producto;
 import Consultas.CategoriaDao;
 import Consultas.ProductoDao;
+import java.awt.Dialog;
+import java.awt.Window;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -10,6 +12,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.text.DecimalFormat;
+import javax.swing.SwingUtilities;
 
 
 public class PanelProducto extends javax.swing.JPanel {
@@ -57,7 +60,7 @@ public class PanelProducto extends javax.swing.JPanel {
         });
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "LISTADO DE PRODUCTOS", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "LISTADO DE PRODUCTOS", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
 
         TablaProducto.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         TablaProducto.setModel(new javax.swing.table.DefaultTableModel(
@@ -102,6 +105,11 @@ public class PanelProducto extends javax.swing.JPanel {
         btnEditarProducto.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnEditarProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/EDITAR.png"))); // NOI18N
         btnEditarProducto.setText("EDITAR");
+        btnEditarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarProductoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -117,7 +125,6 @@ public class PanelProducto extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btnListarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnEditarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -168,11 +175,42 @@ public class PanelProducto extends javax.swing.JPanel {
                 new Object[]{},
                 null
         );
+        Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof Dialog) {
+            Dialog dialog = (Dialog) window;
+            dialog.dispose();
+        }
     }//GEN-LAST:event_btnNuevoProductoActionPerformed
 
     private void btnListarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarProductoActionPerformed
+        limpiarTabla();
         listarProducto(TablaProducto);
     }//GEN-LAST:event_btnListarProductoActionPerformed
+
+    private void btnEditarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarProductoActionPerformed
+        int filaSeleccionada = TablaProducto.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
+        }else{
+            Object valorCelda = TablaProducto.getValueAt(filaSeleccionada, 0);
+            if (valorCelda instanceof Integer){
+                int idProducto = (int) valorCelda;
+                Producto p = daoProducto.leerProducto(idProducto);
+                panelRegistroProducto.setDatosEditar(p);
+                panelRegistroProducto.btnGuardarProducto.setEnabled(false);
+                JOptionPane.showOptionDialog(
+                        null,
+                        panelRegistroProducto,
+                        "EDITAR PRODUCTO",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        new Object[]{},
+                        null
+                );
+            }
+        }
+    }//GEN-LAST:event_btnEditarProductoActionPerformed
 
     public void listarProducto(JTable tabla) {
         modeloProducto = (DefaultTableModel) tabla.getModel();
@@ -201,6 +239,13 @@ public class PanelProducto extends javax.swing.JPanel {
             modeloProducto.addRow(object);
         }
         TablaProducto.setModel(modeloProducto);
+    }
+    
+    void limpiarTabla() {
+        for (int i = 0; i < TablaProducto.getRowCount(); i++) {
+            modeloProducto.removeRow(i);
+            i = i - 1;
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

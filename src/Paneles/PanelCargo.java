@@ -8,13 +8,11 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import Consultas.CargoDao;
 import Clases.Cargo;
-import Consultas.UsuarioDao;
 
 public class PanelCargo extends javax.swing.JPanel {
 
     CargoDao daoCargo = new CargoDao();
     DefaultTableModel modeloCargo = new DefaultTableModel();
-    UsuarioDao daoUsuario = new UsuarioDao();
 
     private PanelRegistroCargo panelRegistroCargo;
 

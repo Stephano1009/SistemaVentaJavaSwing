@@ -13,7 +13,6 @@ import java.util.List;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
 public class VentaDao {
 
     Conexion conectar = new Conexion();
@@ -21,6 +20,7 @@ public class VentaDao {
     PreparedStatement ps;
     ResultSet rs;
     Statement stmt;
+
     /*
     Creamos el metodo para obtener el valor del último correlativo
     de una venta almacenada en la base de datos

@@ -10,6 +10,8 @@ public class Producto {
    boolean estadoProducto;
    int idCategoria;
    int idProveedor;
+   String nombreCategoria;
+   String nombreProveedor;
 
     public Producto() {
     }
@@ -97,6 +99,23 @@ public class Producto {
     public void setIdProveedor(int idProveedor) {
         this.idProveedor = idProveedor;
     }
+
+    public String getNombreCategoria() {
+        return nombreCategoria;
+    }
+
+    public void setNombreCategoria(String nombreCategoria) {
+        this.nombreCategoria = nombreCategoria;
+    }
+
+    public String getNombreProveedor() {
+        return nombreProveedor;
+    }
+
+    public void setNombreProveedor(String nombreProveedor) {
+        this.nombreProveedor = nombreProveedor;
+    }
    
+    
     
 }

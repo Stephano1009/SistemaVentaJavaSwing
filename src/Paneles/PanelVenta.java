@@ -450,7 +450,7 @@ public class PanelVenta extends javax.swing.JPanel {
         String producto = txtNombreProducto.getText();
         int cantidadProducto = Integer.parseInt(txtCantidadVenta.getText());
         double precioProducto = Double.parseDouble(txtPrecioVenta.getText());
-        double totalVenta = cantidadProducto * precioProducto;
+        double totalVenta = Math.round(cantidadProducto * precioProducto * 100.0) / 100.0;
 
         if (cantidadProducto <= 0 || cantidadProducto > stockProductoActual) {
             String MensajeError = cantidadProducto <= 0 ? "Cantidad Inválida" : "Stock Insuficiente";
@@ -474,7 +474,7 @@ public class PanelVenta extends javax.swing.JPanel {
                         int nuevaCantidad = Integer.parseInt(nuevaCantidadIngresada);
                         if (nuevaCantidad > 0 && nuevaCantidad <= stockProductoActual) {
                             modeloDetalleVenta.setValueAt(nuevaCantidad, fila, 3);
-                            double nuevoTotal = nuevaCantidad * precioProducto;
+                            double nuevoTotal = Math.round(nuevaCantidad * precioProducto * 100.0) / 100.0;
                             modeloDetalleVenta.setValueAt(nuevoTotal, fila, 5);
                             stockProductoActual -= (nuevaCantidad - cantidadActual);
                             actualizarContador();
@@ -506,7 +506,6 @@ public class PanelVenta extends javax.swing.JPanel {
         limpiarCampos();
     }//GEN-LAST:event_btnAgregarVentaActionPerformed
 
-        
     // ******************* MÉTODOS BOTÓN AGREGAR **********************
     private void errorDialogo(String mensajeError) {
         JOptionPane.showMessageDialog(null, mensajeError, "Error", JOptionPane.ERROR_MESSAGE);
@@ -549,11 +548,10 @@ public class PanelVenta extends javax.swing.JPanel {
             double totalFila = (double) modeloDetalleVenta.getValueAt(i, 5);
             totalAPagar += totalFila;
         }
-
         // Actualizar el valor total a pagar en el componente correspondiente
         txtTotalVenta.setText(String.valueOf(totalAPagar));
     }
-    
+
     //Actualizar contador
     private void actualizarContador() {
         DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
@@ -564,7 +562,7 @@ public class PanelVenta extends javax.swing.JPanel {
         }
         contador = rowCount > 0 ? rowCount + 1 : 1;
     }
-    
+
     // ******************* BOTÓN REGISTRAR **********************
     private void btnRegistrarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarVentaActionPerformed
         List<String> mensajesError = validarCampos();
@@ -592,7 +590,7 @@ public class PanelVenta extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnRegistrarVentaActionPerformed
 
-        // ******************* MÉTODOS BOTÓN REGISTRAR **********************
+    // ******************* MÉTODOS BOTÓN REGISTRAR **********************
     public String primerCaracter(String str, int n) {
         /*Si en caso la cadena es nula, evitamos el nullPointerException*/
         if (str == null) {
@@ -705,7 +703,7 @@ public class PanelVenta extends javax.swing.JPanel {
         }
         return mensajesError;
     }
-    
+
     // ******************* BOTÓN ELIMINAR **********************
     private void btnEliminarRegistroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarRegistroActionPerformed
         DefaultTableModel modeloDetalleVenta = (DefaultTableModel) TablaDetalleVenta.getModel();
@@ -733,6 +731,8 @@ public class PanelVenta extends javax.swing.JPanel {
 
                 // Mostrar mensaje de éxito
                 JOptionPane.showMessageDialog(null, "Producto eliminado correctamente", "Eliminado", JOptionPane.INFORMATION_MESSAGE);
+
+                limpiarCampos();
 
                 // Setear el valor total
                 calcularTotalAPagar();
@@ -771,7 +771,7 @@ public class PanelVenta extends javax.swing.JPanel {
             }
         });
     }
-    
+
     public void validarCantidadObtenida() {
         AbstractDocument document = (AbstractDocument) txtCantidadVenta.getDocument();
         document.setDocumentFilter(new DocumentFilter() {

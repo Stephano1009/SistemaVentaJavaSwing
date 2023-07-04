@@ -227,7 +227,6 @@ public class PanelRegistroUsuario extends javax.swing.JPanel {
     }//GEN-LAST:event_btnActualizarUsuarioActionPerformed
 
     public void agregarUsuario() {
-
         String nomUsu = txtNombreUsuario.getText();
         char[] claUsu = pswClaveUsuario.getPassword();
         String claveString = new String(claUsu);
@@ -286,7 +285,6 @@ public class PanelRegistroUsuario extends javax.swing.JPanel {
             }
             btnGuardarUsuario.setEnabled(false);
         }
-
     }
 
     public void setDatosEditar(Usuario u) {
