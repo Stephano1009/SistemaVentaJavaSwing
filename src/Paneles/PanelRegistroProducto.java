@@ -21,6 +21,8 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
         initComponents();
         CargarCategorias();
         CargarProveedor();
+        txtIdProducto.setVisible(false);
+
     }
 
     public void CargarCategorias() {
@@ -71,6 +73,7 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
         chkActivoProducto = new javax.swing.JCheckBox();
         btnGuardarProducto = new javax.swing.JButton();
         btnActualizarProducto = new javax.swing.JButton();
+        txtIdProducto = new javax.swing.JLabel();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -138,6 +141,8 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
             }
         });
 
+        txtIdProducto.setText("txtIdProducto");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -158,8 +163,7 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
                             .addComponent(txtPrecioProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnGuardarProducto, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(22, 22, 22)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chkActivoProducto)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel8)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLabel7)
@@ -168,8 +172,13 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
                                 .addComponent(jLabel6)
                                 .addComponent(cboCategoriaProducto, 0, 271, Short.MAX_VALUE)
                                 .addComponent(cboProveedorProducto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(btnActualizarProducto))))
-                .addContainerGap(27, Short.MAX_VALUE))
+                            .addComponent(btnActualizarProducto)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(chkActivoProducto)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
+                                .addComponent(txtIdProducto)
+                                .addGap(48, 48, 48)))))
+                .addContainerGap(0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -205,7 +214,8 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtPrecioProducto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(chkActivoProducto))
+                    .addComponent(chkActivoProducto)
+                    .addComponent(txtIdProducto))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardarProducto)
@@ -314,14 +324,14 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
         String nombreProducto = txtNombreProducto.getText();
         String descripcionProducto = txtDescripcionProducto.getText();
         String contenidoProducto = txtContenidoProducto.getText();
-        String precioProducto = txtPrecioProducto.getText();
-        String stockProducto = txtStockProducto.getText();
+        double precioProducto = Double.parseDouble(txtPrecioProducto.getText());
+        int stockProducto = Integer.parseInt(txtStockProducto.getText());
         Object valorCategoria = cboCategoriaProducto.getSelectedItem();
         Object valorProveedor = cboProveedorProducto.getSelectedItem();
 
-        if (valorCategoria.toString().equals("Seleccione una categoría")) {
+        if (valorCategoria.toString().equals("SELECCIONE UNA CATEGORÍA")) {
             JOptionPane.showMessageDialog(null, "Error, debe seleccionar una categoría");
-        } else if (valorProveedor.toString().equals("Seleccione un proveedor")) {
+        } else if (valorProveedor.toString().equals("SELECCIONE UN PROVEEDOR")) {
             JOptionPane.showMessageDialog(null, "Error, debe seleccionar un proveedor");
         } else {
             int idCategoria = catDao.obtenerIdCategoriaPorNombreCategoria(valorCategoria.toString());
@@ -331,11 +341,12 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
             p.setNombreProducto(nombreProducto);
             p.setDescripcionProducto(descripcionProducto);
             p.setContenidoProducto(contenidoProducto);
-            p.setPrecioProducto(Double.parseDouble(precioProducto));
-            p.setStockProducto(Integer.parseInt(stockProducto));
+            p.setPrecioProducto(precioProducto);
+            p.setStockProducto(stockProducto);
             p.setIdCategoria(idCategoria);
             p.setIdProveedor(idProveedor);
             p.setEstadoProducto(estadoProducto);
+            p.setIdProducto(Integer.valueOf(this.txtIdProducto.getText()));
 
             int r = daoProducto.actualizarProducto(p);
             if (r == 1) {
@@ -360,6 +371,8 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
         String nombreProveedor = daoProducto.obtenerNombreProveedorPorId(idProveedor);
         cboProveedorProducto.setSelectedItem(nombreProveedor);
         chkActivoProducto.setSelected(p.isEstadoProducto());
+        txtIdProducto.setText(Integer.toString(p.getIdProducto()));
+        txtIdProducto.setVisible(false);
     }
 
 
@@ -381,6 +394,7 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
     public javax.swing.JPanel jPanel2;
     public javax.swing.JTextField txtContenidoProducto;
     public javax.swing.JTextField txtDescripcionProducto;
+    private javax.swing.JLabel txtIdProducto;
     public javax.swing.JTextField txtNombreProducto;
     public javax.swing.JTextField txtPrecioProducto;
     public javax.swing.JTextField txtStockProducto;

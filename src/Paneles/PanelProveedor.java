@@ -54,7 +54,7 @@ public class PanelProveedor extends javax.swing.JPanel {
         });
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "LISTADO DE PROVEEDORES", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "LISTADO DE PROVEEDORES", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
 
         TablaProveedor.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         TablaProveedor.setModel(new javax.swing.table.DefaultTableModel(
@@ -96,10 +96,20 @@ public class PanelProveedor extends javax.swing.JPanel {
         btnEliminarProveedor.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnEliminarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/eliminar proveedor.png"))); // NOI18N
         btnEliminarProveedor.setText("ELIMINAR");
+        btnEliminarProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarProveedorActionPerformed(evt);
+            }
+        });
 
         btnEditarProveedor.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnEditarProveedor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/EDITAR.png"))); // NOI18N
         btnEditarProveedor.setText("EDITAR");
+        btnEditarProveedor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarProveedorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -152,6 +162,7 @@ public class PanelProveedor extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnListaProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaProveedorActionPerformed
+        limpiarTabla();
         listarProveedor(TablaProveedor);
     }//GEN-LAST:event_btnListaProveedorActionPerformed
 
@@ -169,6 +180,37 @@ public class PanelProveedor extends javax.swing.JPanel {
                 null
         );
     }//GEN-LAST:event_btnNuevoProveedorActionPerformed
+
+    private void btnEditarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarProveedorActionPerformed
+        int filaSeleccionada = TablaProveedor.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
+        } else {
+            Object valorCelda = TablaProveedor.getValueAt(filaSeleccionada, 0);
+            if (valorCelda instanceof Integer) {
+                int idProveedor = (int) valorCelda;
+                Proveedor pr = daoProveedor.leerProveedor(idProveedor);
+                panelRegistroProveedor.setDatosEditar(pr);
+                panelRegistroProveedor.btnGuardarProveedor.setEnabled(false);
+                JOptionPane.showOptionDialog(
+                        null,
+                        panelRegistroProveedor,
+                        "EDITAR PROVEEDOR",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        new Object[]{},
+                        null
+                );
+            }
+        }
+    }//GEN-LAST:event_btnEditarProveedorActionPerformed
+
+    private void btnEliminarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarProveedorActionPerformed
+        deleteProveedor();
+        limpiarTabla();
+        listarProveedor(TablaProveedor);
+    }//GEN-LAST:event_btnEliminarProveedorActionPerformed
 
     public void listarProveedor(JTable tabla) {
         modeloProveedor = (DefaultTableModel) tabla.getModel();
@@ -199,6 +241,23 @@ public class PanelProveedor extends javax.swing.JPanel {
             modeloProveedor.addRow(object);
         }
         TablaProveedor.setModel(modeloProveedor);
+    }
+    public void deleteProveedor() {
+        int filaProveedor = TablaProveedor.getSelectedRow();
+        if (filaProveedor == -1) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un fila");
+        } else {
+            int id = Integer.parseInt((String) TablaProveedor.getValueAt(filaProveedor, 0).toString());
+            daoProveedor.deteleProve(id);
+            JOptionPane.showMessageDialog(null, "Proveedor Eliminado con Exito");
+        }
+    }
+    
+    void limpiarTabla() {
+        for (int i = 0; i < TablaProveedor.getRowCount(); i++) {
+            modeloProveedor.removeRow(i);
+            i = i - 1;
+        }
     }
 
 

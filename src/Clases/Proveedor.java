@@ -3,7 +3,7 @@ package Clases;
 public class Proveedor {
 
     int idProveedor;
-    int rucProveedor;
+    String rucProveedor;
     String nombreProveedor;
     String celularProveedor;
     boolean estadoProveedor;
@@ -11,7 +11,7 @@ public class Proveedor {
     public Proveedor() {
     }
 
-    public Proveedor(int idProveedor, int rucProveedor, String nombreProveedor, String celularProveedor, boolean estadoProveedor) {
+    public Proveedor(int idProveedor, String rucProveedor, String nombreProveedor, String celularProveedor, boolean estadoProveedor) {
         this.idProveedor = idProveedor;
         this.rucProveedor = rucProveedor;
         this.nombreProveedor = nombreProveedor;
@@ -27,11 +27,11 @@ public class Proveedor {
         this.idProveedor = idProveedor;
     }
 
-    public int getRucProveedor() {
+    public String getRucProveedor() {
         return rucProveedor;
     }
 
-    public void setRucProveedor(int rucProveedor) {
+    public void setRucProveedor(String rucProveedor) {
         this.rucProveedor = rucProveedor;
     }
 

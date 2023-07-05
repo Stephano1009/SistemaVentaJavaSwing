@@ -73,6 +73,7 @@ public class ProductoDao {
             if (rs.next()) {
                 /* Paso 9: Instanciamos el objeto usuario */
                 pro = new Producto();
+                pro.setIdProducto(idProducto);
                 pro.setNombreProducto(rs.getString("nombreProducto"));
                 pro.setDescripcionProducto(rs.getString("descripcionProducto"));
                 pro.setContenidoProducto(rs.getString("contenidoProducto"));
