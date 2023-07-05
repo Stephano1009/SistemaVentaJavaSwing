@@ -70,6 +70,7 @@ public class CargoDao {
             if (rs.next()) {
                 /* Paso 9: Instanciamos el objeto cargo */
                 car = new Cargo();
+                car.setIdCargo(idCargo);
                 car.setIdCargo(rs.getInt("idCargo"));
                 car.setNombreCargo(rs.getString("nombreCargo"));
                 car.setEstadoCargo(rs.getBoolean("estadoCargo"));

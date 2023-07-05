@@ -86,13 +86,15 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Component id="chkActivoCategoria" min="-2" pref="106" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
+                                      <Component id="txtIdCategoria" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                                   <Component id="txtNombreCategoria" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="txtGuardarCategoria" min="-2" max="-2" attributes="0"/>
+                              <Component id="btnGuardarCategoria" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="btnActualizarCategoria" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -113,10 +115,11 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="chkActivoCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtIdCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txtGuardarCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnGuardarCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnActualizarCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
@@ -157,7 +160,7 @@
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JButton" name="txtGuardarCategoria">
+            <Component class="javax.swing.JButton" name="btnGuardarCategoria">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Book Antiqua" size="12" style="0"/>
@@ -167,6 +170,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="GUARDAR CATEGOR&#xcd;A"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGuardarCategoriaActionPerformed"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
               </AuxValues>
@@ -181,9 +187,17 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="ACTUALIZAR CATEGOR&#xcd;A"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActualizarCategoriaActionPerformed"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="txtIdCategoria">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="txtIdCategoria"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

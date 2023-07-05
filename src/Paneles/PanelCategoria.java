@@ -57,6 +57,11 @@ public class PanelCategoria extends javax.swing.JPanel {
         btnEliminarCategoria.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnEliminarCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/eliminar.png"))); // NOI18N
         btnEliminarCategoria.setText("ELIMINAR");
+        btnEliminarCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarCategoriaActionPerformed(evt);
+            }
+        });
 
         btnListarCategoria.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnListarCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/lista.png"))); // NOI18N
@@ -68,7 +73,7 @@ public class PanelCategoria extends javax.swing.JPanel {
         });
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "LISTADO DE CATEGORÍAS", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "LISTADO DE CATEGORÍAS", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
 
         TablaCategoria.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         TablaCategoria.setModel(new javax.swing.table.DefaultTableModel(
@@ -101,6 +106,11 @@ public class PanelCategoria extends javax.swing.JPanel {
         btnEditarCategoria.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnEditarCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/EDITAR.png"))); // NOI18N
         btnEditarCategoria.setText("EDITAR");
+        btnEditarCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarCategoriaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -154,6 +164,7 @@ public class PanelCategoria extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnListarCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListarCategoriaActionPerformed
+        limpiarTabla();
         listarCategorias(TablaCategoria);
     }//GEN-LAST:event_btnListarCategoriaActionPerformed
 
@@ -171,6 +182,37 @@ public class PanelCategoria extends javax.swing.JPanel {
                 null
         );
     }//GEN-LAST:event_btnNuevaCategoriaActionPerformed
+
+    private void btnEditarCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarCategoriaActionPerformed
+        int filaSeleccionada = TablaCategoria.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
+        } else {
+            Object valorCelda = TablaCategoria.getValueAt(filaSeleccionada, 0);
+            if (valorCelda instanceof Integer) {
+                int idCategoria = (int) valorCelda;
+                Categoria cate = daoCategoria.leerCategoria(idCategoria);
+                panelRegistroCategoria.setDatosEditar(cate);
+                panelRegistroCategoria.btnGuardarCategoria.setEnabled(false);
+                JOptionPane.showOptionDialog(
+                        null,
+                        panelRegistroCategoria,
+                        "EDITAR CATEGORÍA",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        new Object[]{},
+                        null
+                );
+            }
+        }
+    }//GEN-LAST:event_btnEditarCategoriaActionPerformed
+
+    private void btnEliminarCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarCategoriaActionPerformed
+        deleteCategoria();
+        limpiarTabla();
+        listarCategorias(TablaCategoria);
+    }//GEN-LAST:event_btnEliminarCategoriaActionPerformed
 
     public void listarCategorias(JTable tabla) {
         modeloCategoria = (DefaultTableModel) tabla.getModel();
@@ -197,6 +239,24 @@ public class PanelCategoria extends javax.swing.JPanel {
             modeloCategoria.addRow(object);
         }
         TablaCategoria.setModel(modeloCategoria);
+    }
+    
+    public void deleteCategoria() {
+        int filaCategoria = TablaCategoria.getSelectedRow();
+        if (filaCategoria == -1) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un fila");
+        } else {
+            int id = Integer.parseInt((String) TablaCategoria.getValueAt(filaCategoria, 0).toString());
+            daoCategoria.deteleCate(id);
+            JOptionPane.showMessageDialog(null, "Categoría Eliminada con Exito");
+        }
+    }
+    
+    void limpiarTabla() {
+        for (int i = 0; i < TablaCategoria.getRowCount(); i++) {
+            modeloCategoria.removeRow(i);
+            i = i - 1;
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
