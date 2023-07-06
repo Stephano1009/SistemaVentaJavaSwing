@@ -6,6 +6,10 @@ import java.awt.Window;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 public class PanelRegistroProveedor extends javax.swing.JPanel {
 
@@ -14,6 +18,7 @@ public class PanelRegistroProveedor extends javax.swing.JPanel {
 
     public PanelRegistroProveedor() {
         initComponents();
+        ValidarCampo();
         txtIdProveedor.setVisible(false);
     }
 
@@ -242,6 +247,86 @@ public class PanelRegistroProveedor extends javax.swing.JPanel {
             return false;
         }
         return true;
+    }
+    
+    private void ValidarCampo() {
+        // Validar campo de RUC
+        ((AbstractDocument) txtRucProveedor.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("\\d{0,11}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("\\d{0,11}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        // Validar campo de nombre
+        ((AbstractDocument) txtNombreProveedor.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("[a-zA-Z ]{0,20}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("[a-zA-Z ]{0,20}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        // Validar campo de celular
+        ((AbstractDocument) txtCelularProveedor.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("\\d{0,9}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("\\d{0,9}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
     }
 
     public void setDatosEditar(Proveedor pr) {

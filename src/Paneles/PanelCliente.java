@@ -54,7 +54,7 @@ public class PanelCliente extends javax.swing.JPanel {
         });
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "LISTADO DE CLIENTES", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "LISTADO DE CLIENTES", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
 
         TablaClientes.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         TablaClientes.setModel(new javax.swing.table.DefaultTableModel(
@@ -96,10 +96,20 @@ public class PanelCliente extends javax.swing.JPanel {
         btnEliminarCliente.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnEliminarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/eliminar.png"))); // NOI18N
         btnEliminarCliente.setText("ELIMINAR");
+        btnEliminarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarClienteActionPerformed(evt);
+            }
+        });
 
         btnEditarCliente.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnEditarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/EDITAR.png"))); // NOI18N
         btnEditarCliente.setText("EDITAR");
+        btnEditarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarClienteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -179,6 +189,37 @@ public class PanelCliente extends javax.swing.JPanel {
         listarCliente(TablaClientes);
     }//GEN-LAST:event_btnListarClienteActionPerformed
 
+    private void btnEditarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarClienteActionPerformed
+        int filaSeleccionada = TablaClientes.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
+        } else {
+            Object valorCelda = TablaClientes.getValueAt(filaSeleccionada, 0);
+            if (valorCelda instanceof Integer) {
+                int idCliente = (int) valorCelda;
+                Cliente cl = daoCliente.leerCliente(idCliente);
+                panelRegistroCliente.setDatosEditar(cl);
+                panelRegistroCliente.btnGuardarCliente.setEnabled(false);
+                JOptionPane.showOptionDialog(
+                        null,
+                        panelRegistroCliente,
+                        "EDITAR CLIENTE",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        new Object[]{},
+                        null
+                );
+            }
+        }
+    }//GEN-LAST:event_btnEditarClienteActionPerformed
+
+    private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
+        deleteCliente();
+        limpiarTabla();
+        listarCliente(TablaClientes);
+    }//GEN-LAST:event_btnEliminarClienteActionPerformed
+
     void limpiarTabla() {
         for (int i = 0; i < TablaClientes.getRowCount(); i++) {
             modeloCliente.removeRow(i);
@@ -208,6 +249,17 @@ public class PanelCliente extends javax.swing.JPanel {
             modeloCliente.addRow(object);
         }
         TablaClientes.setModel(modeloCliente);
+    }
+    
+    public void deleteCliente() {
+        int filaCliente = TablaClientes.getSelectedRow();
+        if (filaCliente == -1) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un fila");
+        } else {
+            int id = Integer.parseInt((String) TablaClientes.getValueAt(filaCliente, 0).toString());
+            daoCliente.detelecli(id);
+            JOptionPane.showMessageDialog(null, "Cliente Eliminado con Exito");
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

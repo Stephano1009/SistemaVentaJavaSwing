@@ -4,6 +4,7 @@ import Clases.Cliente;
 import Consultas.ClienteDao;
 import java.awt.Dialog;
 import java.awt.Window;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
@@ -20,6 +21,7 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
     public PanelRegistroCliente() {
         initComponents();
         ValidarCampo();
+        txtIdCliente.setVisible(false);
     }
 
     private PanelCliente panelCliente;
@@ -43,13 +45,14 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
         txtDniCliente = new javax.swing.JTextField();
         btnGuardarCliente = new javax.swing.JButton();
         btnActualizarCliente = new javax.swing.JButton();
+        txtIdCliente = new javax.swing.JLabel();
 
         jTextField2.setText("jTextField2");
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "DATOS DEL CLIENTE", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "DATOS DEL CLIENTE", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jLabel1.setText("Nombre Cliente:");
@@ -72,6 +75,13 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
         btnActualizarCliente.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnActualizarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/actualizar.png"))); // NOI18N
         btnActualizarCliente.setText("ACTUALIZAR CLIENTE");
+        btnActualizarCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarClienteActionPerformed(evt);
+            }
+        });
+
+        txtIdCliente.setText("txtIdCliente");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -90,11 +100,13 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
                     .addComponent(txtDniCliente))
                 .addContainerGap())
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(31, Short.MAX_VALUE)
-                .addComponent(btnGuardarCliente)
                 .addGap(18, 18, 18)
+                .addComponent(btnGuardarCliente)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnActualizarCliente)
-                .addGap(27, 27, 27))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtIdCliente)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -114,7 +126,8 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnGuardarCliente)
-                    .addComponent(btnActualizarCliente))
+                    .addComponent(btnActualizarCliente)
+                    .addComponent(txtIdCliente))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -160,6 +173,16 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnGuardarClienteActionPerformed
 
+    private void btnActualizarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarClienteActionPerformed
+        ActualizarCliente();
+        Window window = SwingUtilities.getWindowAncestor(this);
+        if (window instanceof JDialog) {
+            JDialog dialog = (JDialog) window;
+            dialog.dispose();
+        }
+        btnGuardarCliente.setEnabled(false);
+    }//GEN-LAST:event_btnActualizarClienteActionPerformed
+
     private boolean validarDatos() {
         if (txtNombreCliente.getText().isEmpty()) {
             return false;
@@ -176,7 +199,7 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
     public void agregarCliente() {
         String nomCli = txtNombreCliente.getText();
         String apeCli = txtApellidoCliente.getText();
-        int numCli = Integer.parseInt(txtDniCliente.getText());
+        String numCli = txtDniCliente.getText();
 
         cli.setNombreCliente(nomCli);
         cli.setApellidoCliente(apeCli);
@@ -188,6 +211,23 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(null, "Error");
         }
+    }
+
+    public void ActualizarCliente() {
+        String nomCli = txtNombreCliente.getText();
+        String apeCli = txtApellidoCliente.getText();
+        String dniCli = txtDniCliente.getText();
+        cli.setNombreCliente(nomCli);
+        cli.setApellidoCliente(apeCli);
+        cli.setIdentificacionCliente(dniCli);
+        cli.setIdCliente(Integer.valueOf(this.txtIdCliente.getText()));
+        int r = daoCliente.actualizarCliente(cli);
+        if (r == 1) {
+            JOptionPane.showMessageDialog(null, "Cliente Actualizado con éxito");
+        } else {
+            JOptionPane.showMessageDialog(null, "Error al actualizar cliente");
+        }
+        btnGuardarCliente.setEnabled(false);
     }
 
     private void ValidarCampo() {
@@ -225,7 +265,7 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
                 sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
                 sb.insert(offset, text);
 
-                if (sb.toString().matches("[a-zA-Z]{0,20}")) {
+                if (sb.toString().matches("[a-zA-Z ]{0,20}")) {
                     super.insertString(fb, offset, text, attr);
                 }
             }
@@ -237,7 +277,7 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
                 sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
                 sb.replace(offset, offset + length, text);
 
-                if (sb.toString().matches("[a-zA-Z]{0,20}")) {
+                if (sb.toString().matches("[a-zA-Z ]{0,20}")) {
                     super.replace(fb, offset, length, text, attrs);
                 }
             }
@@ -270,6 +310,14 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
         });
     }
 
+    public void setDatosEditar(Cliente cl) {
+        txtNombreCliente.setText(cl.getNombreCliente());
+        txtApellidoCliente.setText(cl.getApellidoCliente());
+        txtDniCliente.setText(cl.getIdentificacionCliente());
+        txtIdCliente.setText(Integer.toString(cl.getIdCliente()));
+        txtIdCliente.setVisible(false);
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnActualizarCliente;
@@ -282,6 +330,7 @@ public class PanelRegistroCliente extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField2;
     public javax.swing.JTextField txtApellidoCliente;
     public javax.swing.JTextField txtDniCliente;
+    private javax.swing.JLabel txtIdCliente;
     public javax.swing.JTextField txtNombreCliente;
     // End of variables declaration//GEN-END:variables
 }

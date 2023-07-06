@@ -9,6 +9,10 @@ import Consultas.ProveedorDao;
 import java.util.List;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 
 public class PanelRegistroProducto extends javax.swing.JPanel {
 
@@ -21,6 +25,7 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
         initComponents();
         CargarCategorias();
         CargarProveedor();
+        ValidarCampo();
         txtIdProducto.setVisible(false);
 
     }
@@ -373,6 +378,138 @@ public class PanelRegistroProducto extends javax.swing.JPanel {
         chkActivoProducto.setSelected(p.isEstadoProducto());
         txtIdProducto.setText(Integer.toString(p.getIdProducto()));
         txtIdProducto.setVisible(false);
+    }
+    
+    private void ValidarCampo() {
+        // Validar campo de nombre producto
+        ((AbstractDocument) txtNombreProducto.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("[a-zA-Z ]{0,20}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("[a-zA-Z ]{0,20}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+        
+        // Validar campo de descripcion producto
+        ((AbstractDocument) txtDescripcionProducto.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("[a-zA-Z ]{0,100}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("[a-zA-Z ]{0,100}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+        
+        // Validar campo de contenido producto
+        ((AbstractDocument) txtContenidoProducto.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("[a-zA-Z0-9 ]{0,20}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("[a-zA-Z0-9 ]{0,20}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+
+        // Validar campo de precio
+        ((AbstractDocument) txtPrecioProducto.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("\\d{0,9}(\\.\\d{0,2})?")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("\\d{0,9}(\\.\\d{0,2})?")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
+        
+        // Validar campo de stock
+        ((AbstractDocument) txtStockProducto.getDocument()).setDocumentFilter(new DocumentFilter() {
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String text, AttributeSet attr)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.insert(offset, text);
+
+                if (sb.toString().matches("\\d{0,}")) {
+                    super.insertString(fb, offset, text, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
+                    throws BadLocationException {
+                StringBuilder sb = new StringBuilder();
+                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+                sb.replace(offset, offset + length, text);
+
+                if (sb.toString().matches("\\d{0,}")) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+        });
     }
 
 

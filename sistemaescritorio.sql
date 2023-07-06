@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-06-2023 a las 04:04:08
+-- Tiempo de generación: 06-07-2023 a las 01:19:26
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.2.4
 
@@ -40,7 +40,7 @@ CREATE TABLE `cargo` (
 INSERT INTO `cargo` (`idCargo`, `nombreCargo`, `estadoCargo`) VALUES
 (1, 'Gerente', b'1'),
 (2, 'Administrador', b'1'),
-(3, 'Vendedor', b'1');
+(3, 'Empleado', b'1');
 
 -- --------------------------------------------------------
 
@@ -62,7 +62,8 @@ INSERT INTO `categoria` (`idCategoria`, `nombreCategoria`, `estadoCategoria`) VA
 (1, 'Bebidas', b'1'),
 (2, 'Desayunos', b'1'),
 (3, 'Abarrotes', b'1'),
-(4, 'Snack y Golosinas', b'1');
+(4, 'Snack y Golosinas', b'1'),
+(5, 'Limpieza', b'1');
 
 -- --------------------------------------------------------
 
@@ -100,7 +101,7 @@ CREATE TABLE `detalleventa` (
   `idVenta` int(11) NOT NULL,
   `idProducto` int(11) NOT NULL,
   `cantidad` tinyint(4) NOT NULL,
-  `precioVenta` decimal(10,0) NOT NULL
+  `precioVenta` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -108,16 +109,16 @@ CREATE TABLE `detalleventa` (
 --
 
 INSERT INTO `detalleventa` (`idDetalleVenta`, `idVenta`, `idProducto`, `cantidad`, `precioVenta`) VALUES
-(1, 1, 3, 2, 2),
-(2, 1, 1, 3, 2),
-(3, 2, 1, 2, 2),
-(4, 3, 3, 2, 2),
-(5, 4, 3, 4, 2),
-(6, 5, 3, 2, 2),
-(7, 6, 3, 3, 2),
-(8, 7, 1, 3, 2),
-(9, 8, 3, 2, 2),
-(10, 9, 3, 4, 2);
+(1, 1, 3, 1, 1.80),
+(2, 2, 4, 2, 10.50),
+(3, 2, 5, 3, 1.50),
+(4, 3, 4, 5, 10.50),
+(5, 4, 4, 1, 10.50),
+(6, 4, 5, 3, 1.50),
+(7, 5, 3, 3, 1.80),
+(8, 6, 3, 3, 1.80),
+(9, 7, 4, 3, 10.50),
+(10, 8, 4, 3, 10.80);
 
 -- --------------------------------------------------------
 
@@ -178,7 +179,7 @@ CREATE TABLE `producto` (
   `nombreProducto` varchar(20) NOT NULL,
   `descripcionProducto` varchar(500) NOT NULL,
   `contenidoProducto` varchar(100) NOT NULL,
-  `precioProducto` float(10,2) NOT NULL,
+  `precioProducto` decimal(10,2) NOT NULL,
   `estadoProducto` bit(1) NOT NULL,
   `stockProducto` int(11) NOT NULL,
   `idCategoria` int(11) NOT NULL,
@@ -190,9 +191,14 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`idProducto`, `nombreProducto`, `descripcionProducto`, `contenidoProducto`, `precioProducto`, `estadoProducto`, `stockProducto`, `idCategoria`, `idProveedor`) VALUES
-(1, 'Volt', 'Energizante', '180ml', 2.00, b'1', 47, 1, 1),
-(2, 'Avena', 'Avena', '240gr', 2.00, b'1', 1, 2, 1),
-(3, 'Cafe', 'Café Instantáneo', '45 gr', 1.80, b'1', 176, 2, 1);
+(1, 'Volt', 'Energizante', '180ml', 2.00, b'1', 42, 1, 1),
+(2, 'Avena', 'Avena', '240gr', 3.00, b'1', 500, 2, 1),
+(3, 'Cafe', 'Café Instantáneo', '45 gr', 3.60, b'1', 142, 2, 1),
+(4, 'Mermelada', 'Mermelada de fresa', '900 gr', 10.80, b'1', 483, 2, 1),
+(5, 'Cocoa', 'Cocoa Winter', '25 gr', 1.50, b'1', 588, 2, 3),
+(6, 'Leche Gloria', 'Leche Cremosita', '435 ml', 3.50, b'1', 198, 2, 1),
+(7, 'Vodka AC', 'Sabor Manzana', '989 ml', 9.50, b'1', 100, 1, 2),
+(8, 'Yogurt Griego', 'Sin Lactosa', '918 lt', 8.90, b'1', 500, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -202,7 +208,7 @@ INSERT INTO `producto` (`idProducto`, `nombreProducto`, `descripcionProducto`, `
 
 CREATE TABLE `proveedor` (
   `idProveedor` int(11) NOT NULL,
-  `rucProveedor` int(11) NOT NULL,
+  `rucProveedor` varchar(11) NOT NULL,
   `nombreProveedor` varchar(20) NOT NULL,
   `celularProveedor` char(9) NOT NULL,
   `estadoProveedor` bit(1) NOT NULL
@@ -213,9 +219,10 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`idProveedor`, `rucProveedor`, `nombreProveedor`, `celularProveedor`, `estadoProveedor`) VALUES
-(1, 2028563254, 'Alicorp S.A.A.', '912345678', b'1'),
-(2, 2147483647, 'Backus y Johnston S.', '978901234', b'1'),
-(3, 2147483647, 'Luz del Sur S.A.A.', '942367890', b'1');
+(1, '2028563254', 'Alicorp S.A.A.', '912345678', b'1'),
+(2, '2147483647', 'Backus y Johnston S.', '978901234', b'1'),
+(3, '2147483647', 'Luz del Sur S.A.A.', '942367890', b'1'),
+(5, '20859674521', 'Avatar SAC', '963852741', b'1');
 
 -- --------------------------------------------------------
 
@@ -265,15 +272,14 @@ CREATE TABLE `venta` (
 --
 
 INSERT INTO `venta` (`idVenta`, `serie`, `numeroCorrelativo`, `tipoComprobante`, `idMetodoPago`, `idEmpleado`, `idCliente`, `fechaVenta`, `estadoVenta`, `total`) VALUES
-(1, 'B0001', '00001', 'B', 3, 1, 2, '2023-06-26', b'1', 9.60),
-(2, 'B0001', '00002', 'B', 4, 1, 6, '2023-06-26', b'1', 4.00),
-(3, 'B0001', '00003', 'B', 4, 1, 3, '2023-06-27', b'1', 3.60),
-(4, 'B0001', '00004', 'B', 2, 1, 3, '2023-06-27', b'1', 7.20),
-(5, 'B0001', '00005', 'B', 2, 1, 2, '2023-06-27', b'1', 3.60),
-(6, 'B0001', '00006', 'B', 2, 1, 2, '2023-06-27', b'1', 5.40),
-(7, 'B0001', '00007', 'B', 1, 1, 1, '2023-06-27', b'1', 6.00),
-(8, 'B0001', '00008', 'B', 3, 1, 2, '2023-06-27', b'1', 3.60),
-(9, 'B0001', '00009', 'B', 1, 1, 2, '2023-06-27', b'1', 7.20);
+(1, 'B0001', '00001', 'B', 1, 1, 2, '2023-07-01', b'1', 1.80),
+(2, 'B0001', '00002', 'B', 1, 1, 2, '2023-07-01', b'1', 25.50),
+(3, 'B0001', '00003', 'B', 2, 1, 3, '2023-07-02', b'1', 52.50),
+(4, 'B0001', '00004', 'B', 2, 1, 3, '2023-07-02', b'1', 15.00),
+(5, 'B0001', '00005', 'B', 3, 1, 4, '2023-07-02', b'1', 5.40),
+(6, 'B0001', '00006', 'B', 3, 1, 4, '2023-07-02', b'1', 5.40),
+(7, 'B0001', '00007', 'B', 2, 1, 3, '2023-07-02', b'1', 31.50),
+(8, 'B0001', '00008', 'B', 3, 1, 3, '2023-07-03', b'1', 32.40);
 
 --
 -- Índices para tablas volcadas
@@ -366,7 +372,7 @@ ALTER TABLE `cargo`
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `idCategoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idCategoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `cliente`
@@ -396,13 +402,13 @@ ALTER TABLE `metodopago`
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idProducto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `idProveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `idProveedor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
@@ -414,7 +420,7 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `venta`
 --
 ALTER TABLE `venta`
-  MODIFY `idVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `idVenta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restricciones para tablas volcadas
