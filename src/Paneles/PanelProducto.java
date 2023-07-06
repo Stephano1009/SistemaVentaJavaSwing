@@ -70,7 +70,15 @@ public class PanelProducto extends javax.swing.JPanel {
             new String [] {
                 "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CONTENIDO", "PRECIO", "STOCK", "CATEGORÍA"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(TablaProducto);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);

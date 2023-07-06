@@ -142,7 +142,7 @@ public class PanelVenta extends javax.swing.JPanel {
         jLabel1.setText("GENERAR VENTA");
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "GENERAR NUEVA VENTA", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(41, 43, 45)), "GENERAR NUEVA VENTA", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Book Antiqua", 0, 12))); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         jLabel2.setText("CLIENTE");
@@ -199,17 +199,9 @@ public class PanelVenta extends javax.swing.JPanel {
 
             },
             new String [] {
-                "N°", "CODIGO", "PRODUCTO", "CANTIDAD", "PRECIO VENTA", "TOTAL"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
-            };
 
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
             }
-        });
+        ));
         jScrollPane1.setViewportView(TablaDetalleVenta);
 
         btnRegistrarVenta.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N

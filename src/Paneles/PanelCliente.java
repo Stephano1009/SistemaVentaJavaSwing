@@ -64,7 +64,15 @@ public class PanelCliente extends javax.swing.JPanel {
             new String [] {
                 "CÓDIGO", "NOMBRE CLIENTE", "APELLIDO CLIENTE", "DNI"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(TablaClientes);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);

@@ -40,7 +40,15 @@ public class PanelDetalle extends javax.swing.JPanel {
             new String [] {
                 "CÓDIGO", "COMPROBANTE", "PAGO", "EMPLEADO", "CLIENTE", "FECHA"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(TablaReportes);
 
         btnVerReporte.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
