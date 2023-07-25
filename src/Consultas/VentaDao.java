@@ -94,6 +94,7 @@ public class VentaDao {
                 v.setIdCliente(rs.getInt("idCliente"));
                 v.setFechaVenta(rs.getDate("fechaVenta"));
                 v.setEstadoVenta(rs.getBoolean("estadoVenta"));
+                v.setTotal(rs.getDouble("total"));
                 ReporteVenta.add(v);
             }
         } catch (Exception e) {

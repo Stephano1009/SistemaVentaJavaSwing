@@ -199,7 +199,7 @@ public class PanelVenta extends javax.swing.JPanel {
 
             },
             new String [] {
-
+                "CONTADOR", "CODIGO", "PRODUCTO", "CANTIDAD", "PRECIO", "TOTAL"
             }
         ));
         jScrollPane1.setViewportView(TablaDetalleVenta);

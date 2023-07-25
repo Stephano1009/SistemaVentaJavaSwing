@@ -1,16 +1,32 @@
 package Paneles;
 
+import Clases.ReporteVenta;
 import Clases.Venta;
+import Consultas.ReporteDao;
 import Consultas.VentaDao;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRDataSource;
+import net.sf.jasperreports.engine.JREmptyDataSource;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class PanelDetalle extends javax.swing.JPanel {
-    
+
     VentaDao daoVenta = new VentaDao();
+    ReporteDao daoReporte = new ReporteDao();
     DefaultTableModel modeloReporte = new DefaultTableModel();
 
     public PanelDetalle() {
@@ -38,11 +54,11 @@ public class PanelDetalle extends javax.swing.JPanel {
 
             },
             new String [] {
-                "CÓDIGO", "COMPROBANTE", "PAGO", "EMPLEADO", "CLIENTE", "FECHA"
+                "CÓDIGO", "CLIENTE", "EMPLEADO", "COMPROBANTE", "TOTAL", "MÉTODO PAGO", "FECHA"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -53,7 +69,7 @@ public class PanelDetalle extends javax.swing.JPanel {
 
         btnVerReporte.setFont(new java.awt.Font("Book Antiqua", 0, 12)); // NOI18N
         btnVerReporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imganes botones/reporte Venta.png"))); // NOI18N
-        btnVerReporte.setText("VER REPORTES");
+        btnVerReporte.setText("GENERAR REPORTE");
         btnVerReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVerReporteActionPerformed(evt);
@@ -102,13 +118,80 @@ public class PanelDetalle extends javax.swing.JPanel {
 
 
     private void btnVerReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerReporteActionPerformed
-        
+        int filaSeleccionada = TablaReportes.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar una fila");
+        } else {
+            Object valorCelda = TablaReportes.getValueAt(filaSeleccionada, 0);
+            if (valorCelda instanceof Integer) {
+                int idVenta = (int) valorCelda;
+                List<ReporteVenta> reporteV = daoReporte.reporteVenta(idVenta);
+                exportarReporte(reporteV);
+            }
+        }
     }//GEN-LAST:event_btnVerReporteActionPerformed
+
+    public void exportarReporte(List<ReporteVenta> reporteV) {
+        InputStream logoEmpresa = null;
+        InputStream logoFooter = null;
+        InputStream reporteJasper = null;
+        double totalAPagar = 0.0;
+        try {
+            // Obtenemos los recurso del proyecto
+            logoEmpresa = PanelDetalle.class.getResourceAsStream("/imagenes/logoEmpresa.png");
+            logoFooter = PanelDetalle.class.getResourceAsStream("/imagenes/footerEmpresa.png");
+            reporteJasper = PanelDetalle.class.getResourceAsStream("/Reportes/Reporte_Venta.jasper");
+
+            if (logoEmpresa != null && logoFooter != null && reporteJasper != null) {
+                for (ReporteVenta rv : reporteV) {
+                    totalAPagar += rv.getTotal();
+                }
+                JasperReport report = (JasperReport) JRLoader.loadObject(reporteJasper);
+                JRDataSource ds = new JRBeanArrayDataSource(reporteV.toArray());
+                Map<String, Object> parameters = new HashMap<>();
+                parameters.put("ds", ds);
+                parameters.put("logoEmpresa", logoEmpresa);
+                parameters.put("imagenAlternativa", logoFooter);
+                parameters.put("totalAPagar", totalAPagar);
+                // Generamos el reporte y lo mostramos en el visor
+                JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, new JREmptyDataSource());
+                JasperViewer.viewReport(jasperPrint);
+            } else {
+                System.out.println("No se puede generar el reporte.");
+            }
+        } catch (Exception e) {
+            System.out.println("Ocurrio un errro al intentar generar el reporte de ventas");
+            e.printStackTrace();
+        } finally {
+            // Cerrar los flujos de recursos en el bloque finally
+            if (logoEmpresa != null) {
+                try {
+                    logoEmpresa.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (logoFooter != null) {
+                try {
+                    logoFooter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (reporteJasper != null) {
+                try {
+                    reporteJasper.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     public void listarVentas(JTable tabla) {
         modeloReporte = (DefaultTableModel) tabla.getModel();
         List<Venta> listaVenta = daoVenta.listarVenta();
-        Object[] object = new Object[6];
+        Object[] object = new Object[7];
 
         // Creamos un objeto DefaultTableCellRenderer para centrar el contenido
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -121,21 +204,24 @@ public class PanelDetalle extends javax.swing.JPanel {
         }
         for (int i = 0; i < listaVenta.size(); i++) {
             object[0] = listaVenta.get(i).getIdVenta();
-            object[1] = listaVenta.get(i).getTipoComprobante();
-
-            int idMetodoPago = listaVenta.get(i).getIdMetodoPago();
-            String nombrePago = daoVenta.obtenerNombrePagoPorId(idMetodoPago);
-            object[2] = nombrePago;
-
-            int idEmpleado = listaVenta.get(i).getIdEmpleado();
-            String nombreEmpleado = daoVenta.obtenerNombreEmpleadoPorId(idEmpleado);
-            object[3] = nombreEmpleado;
 
             int idCliente = listaVenta.get(i).getIdCliente();
             String nombreCliente = daoVenta.obtenerNombreClientePorId(idCliente);
-            object[4] = nombreCliente;
+            object[1] = nombreCliente;
 
-            object[5] = listaVenta.get(i).getFechaVenta();
+            int idEmpleado = listaVenta.get(i).getIdEmpleado();
+            String nombreEmpleado = daoVenta.obtenerNombreEmpleadoPorId(idEmpleado);
+            object[2] = nombreEmpleado;
+
+            object[3] = listaVenta.get(i).getTipoComprobante();
+
+            object[4] = listaVenta.get(i).getTotal();
+
+            int idMetodoPago = listaVenta.get(i).getIdMetodoPago();
+            String nombrePago = daoVenta.obtenerNombrePagoPorId(idMetodoPago);
+            object[5] = nombrePago;
+
+            object[6] = listaVenta.get(i).getFechaVenta();
             modeloReporte.addRow(object);
         }
         TablaReportes.setModel(modeloReporte);
